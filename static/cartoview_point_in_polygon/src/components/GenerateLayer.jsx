@@ -1,4 +1,5 @@
 import { Component } from 'react';
+import slugify from 'slugify';
 
 // reactstrap
 import { Button } from 'reactstrap';
@@ -11,7 +12,7 @@ export default class GenerateLayer extends Component {
     form.append("PointLayer", formValues.layerName);
     form.append("Attribute", formValues.attribute);
     form.append("PolygonLayer", formValues.polygonLayerName);
-    form.append("newLayerName", formValues.outputLayerName);
+    form.append("newLayerName", slugify(formValues.outputLayerName, '_'));
 
     fetch('generate-layer',{
       method:"POST",
