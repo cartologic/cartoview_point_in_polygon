@@ -99,3 +99,7 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+/node_modules
+
+/static/cartoview_point_in_polygon/node_modules
