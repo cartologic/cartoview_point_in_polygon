@@ -16,6 +16,22 @@ class ConfigForm extends Component {
     saved: false,
     loading: true
   }
+
+
+  goToStep(step){
+    this.setState({step});
+  }
+
+
+  updateConfig(newConfig, sameStep){
+    var {config, step} = this.state;
+    Object.assign(config, newConfig);
+    if(!sameStep) step++;
+    const saved = false;
+    this.setState({config, step, saved});
+  }
+
+
   render() {
     var {config, step, saved} = this.state
     const steps = [{
@@ -23,6 +39,7 @@ class ConfigForm extends Component {
       component: LayersList,
       props: {
         title: "Select Point Layer",
+        layersType: "point",
         onComplete: (layerName) => this.updateConfig({layerName})
       }
     },
@@ -39,6 +56,7 @@ class ConfigForm extends Component {
       component: LayersList,
       props: {
         title: "Select Polygon Layer",
+        layersType: "polygon",
         onComplete: (layerName) => this.updateConfig({polygonLayerName: layerName})
       }
     },
@@ -69,7 +87,9 @@ class ConfigForm extends Component {
     },
     ];
 
-    return  <div className="col-md-12">
+
+    return  (
+      <div className="col-md-12">
         <div className="row">
           <Navigator steps={steps} step={step} onStepSelected={(step)=>this.goToStep(step)}/>
           <div className="col-md-9">
@@ -79,23 +99,8 @@ class ConfigForm extends Component {
           </div>
         </div>
       </div>
+    )
   }
-
-
-  updateConfig(newConfig, sameStep){
-    var {config, step} = this.state;
-    Object.assign(config, newConfig);
-    if(!sameStep) step++;
-    const saved = false;
-    this.setState({config, step, saved});
-  }
-
-
-  goToStep(step){
-    this.setState({step});
-  }
-
-
 }
 
 global.ConfigForm = ConfigForm;

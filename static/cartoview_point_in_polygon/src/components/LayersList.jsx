@@ -1,5 +1,6 @@
 import { Component } from 'react';
 import WMSClient from "../gs-client/WMSClient.jsx";
+import WFSClient from "../gs-client/WFSClient.jsx";
 import { ListGroup, ListGroupItem, ListGroupItemHeading } from 'reactstrap';
 
 
@@ -10,9 +11,28 @@ class LayersList extends Component {
       layers: []
     }
   }
-  componentDidMount(){
-    WMSClient.getLayers().then((layers)=>this.setState({layers}));
+
+
+  loadLayers(){
+    WMSClient.getLayers().then((layers)=>{
+      WFSClient.describeFeatureTypes(this.props.layersType).then((featureTypes) => {
+        layers = layers.filter((layer) => {
+          // searching array using indexOf
+          if (featureTypes.indexOf(layer.name) != -1) {
+            return layer
+          }
+        })
+        this.setState({layers})
+      })
+    });
   }
+  
+
+  componentDidMount(){
+    this.loadLayers()
+  }
+
+
   render(){
     const {layers} = this.state;
     if(layers.length == 0){
