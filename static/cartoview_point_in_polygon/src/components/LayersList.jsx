@@ -21,7 +21,7 @@ class LayersList extends Component {
     const {onComplete} = this.props;
     return <div>
       <h3>
-        {"Select layer "}
+        {this.props.title}
       </h3>
       <ListGroup className="layers-list">
         {
