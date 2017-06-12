@@ -23,7 +23,7 @@ class AttributeSelector extends Component {
     }
 
     return <div>
-        <h3>Select attribute</h3>
+        <h3 style={{fontFamily: "monospace"}}>Select attribute</h3>
         <ListGroup>
           {
             attrs.map(a => isGeom(a) || !filter(a) ? null : <ListGroupItem tag="a" href="#" onClick={()=>onComplete(a.attribute)}>

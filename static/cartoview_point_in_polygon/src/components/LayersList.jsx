@@ -26,7 +26,7 @@ class LayersList extends Component {
       })
     });
   }
-  
+
 
   componentDidMount(){
     this.loadLayers()
@@ -40,7 +40,7 @@ class LayersList extends Component {
     }
     const {onComplete} = this.props;
     return <div>
-      <h3>
+      <h3 style={{fontFamily: "monospace"}}>
         {this.props.title}
       </h3>
       <ListGroup className="layers-list">
