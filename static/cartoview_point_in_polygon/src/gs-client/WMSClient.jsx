@@ -67,7 +67,6 @@ class WMSClient {
   }
 
   getLayer(layerName){
-
     var layer;
     if(this._cashedLayers){
       layer = this._cashedLayers.find(l => l.typename == layerName);

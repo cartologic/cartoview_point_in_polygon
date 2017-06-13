@@ -10,7 +10,7 @@ export default class NewLayerName extends Component {
     const {config, onChange, onComplete, showResults} = this.props;
     return <div>
         <FormGroup>
-          <Label for="exampleEmail"><h3 style={{fontFamily: "monospace"}}>Set New Layer Name</h3></Label>
+          <Label for="exampleEmail"><h4>Set New Layer Name</h4></Label>
           <Input type="text" value={config.outputLayerName} onChange={e => onChange(e.target.value)} placeholder="Layer Name" />
         </FormGroup>
         <GenerateLayer

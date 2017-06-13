@@ -1,6 +1,7 @@
 import { Component } from 'react';
 import WMSClient from "../gs-client/WMSClient.jsx";
 import WFSClient from "../gs-client/WFSClient.jsx";
+import Search from "./Search.jsx";
 import { ListGroup, ListGroupItem, ListGroupItemHeading } from 'reactstrap';
 
 
@@ -13,12 +14,20 @@ class LayersList extends Component {
   }
 
 
+  searchLayers(layerTypeName){
+    WMSClient.getLayer(layerTypeName).then((layers) => {this.setState({layers:[layers]})})
+  }
+
+
+  // layerTypeNames: used as a search suggestion
+  layerTypeNames = []
   loadLayers(){
     WMSClient.getLayers().then((layers)=>{
       WFSClient.describeFeatureTypes(this.props.layersType).then((featureTypes) => {
         layers = layers.filter((layer) => {
           // searching array using indexOf
           if (featureTypes.indexOf(layer.name) != -1) {
+            this.layerTypeNames.push({value:layer.typename, label:layer.title})
             return layer
           }
         })
@@ -40,9 +49,11 @@ class LayersList extends Component {
     }
     const {onComplete} = this.props;
     return <div>
-      <h3 style={{fontFamily: "monospace"}}>
+      <Search layerTypeNames={this.layerTypeNames} searchLayers={(layerName)=>{this.searchLayers(layerName)}}/>
+      <br></br>
+      <h4>
         {this.props.title}
-      </h3>
+      </h4>
       <ListGroup className="layers-list">
         {
           //to={match.url + layer.typename}
