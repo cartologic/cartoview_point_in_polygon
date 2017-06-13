@@ -22,7 +22,7 @@ export default class Search extends Component {
     if (val)
       this.setState({inputValue: val.value}, ()=>this.props.searchLayers(val.value));
     else {
-      this.setState({inputValue: null}, ()=>this.props.searchLayers(null))
+      this.setState({inputValue: ""}, ()=>this.props.searchLayers(null))
     }
   }
 
@@ -34,7 +34,7 @@ export default class Search extends Component {
         placeholder = "Search Layers"
         value = {this.state.inputValue}
         options={this.state.layerTypeNames!=undefined?this.state.layerTypeNames:[]}
-        onChange={(e)=>this.logChange(e)}
+        onChange={(value)=>this.logChange(value)}
         />
     )
   }
