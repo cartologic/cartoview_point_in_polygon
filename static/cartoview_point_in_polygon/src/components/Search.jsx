@@ -35,6 +35,8 @@ export default class Search extends Component {
         value = {this.state.inputValue}
         options={this.state.layerTypeNames!=undefined?this.state.layerTypeNames:[]}
         onChange={(value)=>this.logChange(value)}
+        arrowRenderer = {()=> false}
+        noResultsText={'No Layers Found!!'}
         />
     )
   }

@@ -39,7 +39,7 @@ class ConfigForm extends Component {
       component: LayersList,
       props: {
         title: "Select Point Layer",
-        layersType: "point",
+        layersType: "Point",
         onComplete: (layerName) => this.updateConfig({layerName})
       }
     },
@@ -56,7 +56,7 @@ class ConfigForm extends Component {
       component: LayersList,
       props: {
         title: "Select Polygon Layer",
-        layersType: "polygon",
+        layersType: "Polygon",
         onComplete: (layerName) => this.updateConfig({polygonLayerName: layerName})
       }
     },

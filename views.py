@@ -10,7 +10,7 @@ from django.shortcuts import render, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import ugettext as _
 
-from geonode.layers.models import Layer
+from geonode.layers.models import Layer, Attribute
 from geonode.geoserver.helpers import ogc_server_settings
 from geoserver.catalog import Catalog
 
@@ -23,6 +23,7 @@ gs_catalog = Catalog(ogc_server_settings.internal_rest, username, password)
 
 @login_required
 def index(request):
+
     request = request
     context = {
         "v": __version__,

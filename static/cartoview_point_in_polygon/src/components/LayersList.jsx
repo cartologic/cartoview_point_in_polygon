@@ -9,37 +9,32 @@ class LayersList extends Component {
   constructor(props){
     super(props);
     this.state = {
-      layers: []
+      layers: [],
+      layerTypeNames: []
     }
   }
 
-  // layerTypeNames: used as a search suggestion
-  layerTypeNames = []
 
   searchLayers(layerTypeName){
-    if(layerTypeName)
-      WMSClient.getLayer(layerTypeName).then((layers) => {this.setState({layers:[layers]})})
+    if(layerTypeName){
+      let url = `/apps/cartoview_point_in_polygon/api/layers/?typename=${layerTypeName}&type=${this.props.layersType}`
+      fetch(url, {credentials: 'include',}).then((res) => res.json()).then((layers) => {this.setState({layers:layers.objects})})
+    }
     else{
-      // means clear pressed > reset to empty
-      this.layerTypeNames = []
+      // clear button
       this.loadLayers()
     }
   }
 
 
   loadLayers(){
-    WMSClient.getLayers().then((layers)=>{
-      WFSClient.describeFeatureTypes(this.props.layersType).then((featureTypes) => {
-        layers = layers.filter((layer) => {
-          // searching array using indexOf
-          if (featureTypes.indexOf(layer.name) != -1) {
-            this.layerTypeNames.push({value:layer.typename, label:layer.title})
-            return layer
-          }
-        })
-        this.setState({layers})
+    let url = `/apps/cartoview_point_in_polygon/api/layers/?type=${this.props.layersType}`
+    fetch(url, {credentials: 'include',}).then((res) => res.json()).then((layers) => {
+      let layerTypeNames = layers.objects.map((layer)=>{
+        return {value:layer.typename, label:layer.title}
       })
-    });
+      this.setState({layers:layers.objects, layerTypeNames})
+    })
   }
 
 
@@ -56,14 +51,14 @@ class LayersList extends Component {
     const {onComplete} = this.props;
     return (
       <div>
-        <Search layerTypeNames={this.layerTypeNames} searchLayers={(layerName)=>{this.searchLayers(layerName)}}/>
+        <Search layerTypeNames={this.state.layerTypeNames} searchLayers={(layerName)=>{this.searchLayers(layerName)}}/>
         <br></br>
         <h4>
           {this.props.title}
         </h4>
+
         <ListGroup className="layers-list">
           {
-            //to={match.url + layer.typename}
             layers.map((layer) => <div><ListGroupItem tag="a" href="#" onClick={()=>onComplete(layer.typename)} action>
               <img src={layer.thumbnail_url}/>
               <div className="content">
