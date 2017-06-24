@@ -10,7 +10,7 @@ module.exports = {
     },
     output: {
         path: __dirname + "/dist",
-        filename: "[name].bundle.min.js",
+        filename: "[name].bundle.js",
         sourceMapFilename: "[file].map",
     },
     module: {
