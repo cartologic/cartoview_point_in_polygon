@@ -11,7 +11,6 @@ __pycache__/
 env/
 build/
 develop-eggs/
-dist/
 downloads/
 eggs/
 .eggs/
@@ -101,12 +100,13 @@ ENV/
 .mypy_cache/
 
 /node_modules
-
+node_modules
 /static/cartoview_point_in_polygon/node_modules
 
 # api.py development phase
 api_dev.py
 
 .DS_Store
+
 
 
