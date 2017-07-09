@@ -8,11 +8,15 @@
 {% block head %}
   {% include "geonode/ext_header.html" %}
   {{ block.super }}
+  <style>
+    #wrap{
+      background-color: #f3f3f3;
+    }
+  </style>
 {% endblock %}
 
 
 {% block app_configuration %}
-  <br>
   <br>
   <div class="container">
       <div class="row" id="config-form-ct"></div>

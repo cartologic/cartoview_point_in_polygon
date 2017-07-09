@@ -32,6 +32,17 @@ class ConfigForm extends Component {
   }
 
 
+  navBar(){
+    return(
+    <nav className="navbar navbar-default">
+      <div className="container">
+        <h4 style={{color:"dimgray"}}>Cartoview Point in Polygon Analysis Tool</h4>
+      </div>
+    </nav>
+    )
+  }
+
+
   render() {
     var {config, step, saved} = this.state
     const steps = [{
@@ -90,6 +101,7 @@ class ConfigForm extends Component {
 
     return  (
       <div className="col-md-12">
+        <div className="row">{this.navBar()}</div>
         <div className="row">
           <Navigator steps={steps} step={step} onStepSelected={(step)=>this.goToStep(step)}/>
           <div className="col-md-9">

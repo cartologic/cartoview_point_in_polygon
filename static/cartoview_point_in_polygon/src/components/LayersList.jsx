@@ -69,7 +69,7 @@ class LayersList extends Component {
 
   pagination(){
     return(
-      <ul className="pagination">
+      <ul className="pagination" style={{marginLeft:"40%", marginRight:"40%"}}>
         <li><a onMouseDown={(e)=>this.onPaginationClick(e, "prev")} style={{cursor:"default"}}>{"<"}</a></li>
         <li><a onMouseDown={(e)=>e.preventDefault()} style={{cursor:"default"}}>{this.state.currentPage}</a></li>
         <li><a onMouseDown={(e)=>this.onPaginationClick(e, "next")} style={{cursor:"default"}}>{">"}</a></li>
