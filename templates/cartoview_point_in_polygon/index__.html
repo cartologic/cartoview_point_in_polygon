@@ -1,28 +1,28 @@
-{% extends "app_instance/apps_configuration_base.html" %}
-{% load bootstrap_tags staticfiles %}
-{% load i18n %}
-
-{% block title %} Point in Polygon {% endblock %}
-
-
-{% block head %}
-  {% include "geonode/ext_header.html" %}
-  {{ block.super }}
-{% endblock %}
-
-
-{% block app_configuration %}
-  <br>
-  <br>
+<!-- {% load staticfiles %} -->
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cartoview Point in Polygon Analysis Tool</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" >
+  <link rel="shortcut icon" type="image/png" href="{{ STATIC_URL }}cartoview/img/icon.png"/>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" >
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body style="background-color: #f3f3f3;">
+  <nav class="navbar sticky-top navbar-light bg-faded" style="background-color: #f3f3f3; opacity: .95;">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <img src="{% static 'cartoview/img/cartoview-logo-text.png'%}" width="225" height="65" alt="">
+      </a>
+      <h3 style="float: right; margin-top: 2%; color:#6e6e6e;">Point in Polygon Analysis Tool</h3>
+    <div>
+  </nav>
   <div class="container">
-      <div class="row" id="config-form-ct"></div>
+    <br>
+    <div class="row" id="config-form-ct"></div>
   </div>
-  <br>
-  <br>
-{% endblock %}
-
-
-{% block extra_script %}
+  <!--  helper script -->
   <script type="text/javascript">
     function getCookie(name) {
       var cookieValue = null;
@@ -42,25 +42,22 @@
     const URLS = {
       geoserver: "{{ GEOSERVER_BASE_URL }}",
       geoserverRestProxy:"proxy/geoserver/rest",
-      stylesUrl: "{% url 'cartoview_heatmap_styler.index' %}styles",
       //{% if PROXY_URL %}
       proxy: "{{ PROXY_URL }}",
       //{% endif %}
       static: "{{ STATIC_URL }}",
       media: "{{ MEDIA_URL }}",
       rest: "{% url 'app_manager_base_url' %}rest/app_manager/",
-      geonodeRest: "{% url 'api_api_top_level' 'api' %}"
+      geonodeRest: "{% url 'api_api_top_level' 'api' %}",
     };
     const CSRF_TOKEN = getCookie('csrftoken');
-    const APP_NAME = "{{APP_NAME}}"
   </script>
 
-  <!-- <script src="{{ STATIC_URL }}cartoview_heatmap_styler/ol.js"></script> -->
-  <!-- <script src="{{ STATIC_URL }}cartoview_heatmap_styler/OpenLayers.js"></script> -->
+  <!-- bundle.js -->
   <script src="{{ STATIC_URL }}cartoview_point_in_polygon/dist/point-in-polygon.bundle.min.js?v={{v}}"></script>
-
   <script type="text/javascript">
     var configForm = React.createElement(ConfigForm);
     ReactDOM.render(configForm, document.getElementById("config-form-ct"));
   </script>
-{% endblock %}
+</body>
+</html>

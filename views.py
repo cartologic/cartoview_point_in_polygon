@@ -29,6 +29,7 @@ def index(request):
         "v": __version__,
         "pnppath":"http://"+request.get_host(),
         "ogc": ogc_server_settings.LOCATION,
+        "APP_NAME": APP_NAME
     }
     return render(request, "%s/index.html" % APP_NAME, context)
 
