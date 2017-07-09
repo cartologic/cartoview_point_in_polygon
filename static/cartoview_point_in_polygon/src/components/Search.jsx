@@ -8,13 +8,25 @@ export default class Search extends Component {
     super(props)
     this.state={
       inputValue: "",
+      layerTypeNames: []
     }
+  }
+
+  loadLayers(){
+    let url = `/apps/${APP_NAME}/api/layers/?type=${this.props.layerType}`
+    fetch(url, {credentials: 'include',})
+    .then((res) => res.json())
+    .then((layers) => {
+      let layerTypeNames = layers.objects.map((layer)=>{
+        return {value:layer.typename, label:layer.title}
+      })
+      this.setState({layerTypeNames})
+    })
   }
 
 
   componentDidMount(){
-    const layerTypeNames = this.props.layerTypeNames
-    this.setState({layerTypeNames})
+    this.loadLayers()
   }
 
 

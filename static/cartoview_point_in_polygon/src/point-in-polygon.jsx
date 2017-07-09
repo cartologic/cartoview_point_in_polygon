@@ -56,7 +56,7 @@ class ConfigForm extends Component {
       component: LayersList,
       props: {
         title: "Select Polygon Layer",
-        layersType: "Polygon",
+        layerType: "Polygon",
         onComplete: (layerName) => this.updateConfig({polygonLayerName: layerName})
       }
     },
