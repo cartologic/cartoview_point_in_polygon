@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import WMSClient from "../gs-client/WMSClient.jsx";
-import { ListGroup, ListGroupItem } from 'reactstrap';
+
 
 class AttributeSelector extends Component {
   state = {
@@ -15,7 +15,7 @@ class AttributeSelector extends Component {
   render(){
     const {attrs} = this.state;
     if(attrs.length == 0){
-      return <div style={{margin: "10% auto auto"}} className="loading"></div>
+      return <div className="loading"></div>
     }
     const {onComplete, filter} =  this.props;
     const isGeom = (a) => {
@@ -23,14 +23,14 @@ class AttributeSelector extends Component {
     }
 
     return <div>
-        <h4>Select attribute</h4>
-        <ListGroup>
+        <p>Select attribute</p>
+        <ul className="list-group">
           {
-            attrs.map(a => isGeom(a) || !filter(a) ? null : <ListGroupItem tag="a" href="#" onClick={()=>onComplete(a.attribute)}>
+            attrs.map(a => isGeom(a) || !filter(a) ? null : <li className="list-group-item"  onClick={()=>onComplete(a.attribute)} style={{marginTop: "4px"}}>
               {a.attribute_label || a.attribute} ({a.attribute_type})
-            </ListGroupItem>)
+            </li>)
           }
-        </ListGroup>
+        </ul>
       </div>;
   }
 }
