@@ -93,19 +93,18 @@ class LayersList extends Component {
 
         <ul className="list-group">
           {
-            //to={match.url + layer.typename}
             layers.map((layer) => {return(
               <div>
                 <li className="list-group-item">
                   <div className="row">
 
-                    <div className="col-xs-3"><img src={layer.thumbnail_url} style={{width:"100%", height:"150px"}}/></div>
+                    <div className="col-xs-12 col-md-3"><img src={layer.thumbnail_url} style={{width:"100%", height:"150px"}}/></div>
 
-                    <div className="col-xs-9">
+                    <div className="col-xs-12 col-md-9">
                       <div className="content">
                         <h4 className="list-group-item-heading">{layer.title}</h4>
                         <hr></hr>
-                        <p className="mb-1">{layer.abstract}</p>
+                        <p className="mb-1">{`${layer.abstract.substring(0,140)} ...`}</p>
                         <br></br>
 
                         <a
@@ -133,7 +132,6 @@ class LayersList extends Component {
             )})
           }
         </ul>
-
         {this.state.showPagination && this.pagination()}
       </div>
     )

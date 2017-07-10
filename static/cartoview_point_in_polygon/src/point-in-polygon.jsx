@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 // components
+import AboutPage from './components/AboutPage.jsx'
 import LayersList from './components/LayersList.jsx'
 import Navigator from './components/Navigator.jsx'
 import AttributeSelector from './components/AttributeSelector.jsx'
@@ -32,6 +33,32 @@ class ConfigForm extends Component {
   }
 
 
+  aboutHeader(){
+    return(
+      <h3>Point in Polygon</h3>
+    )
+  }
+
+
+  aboutBody(){
+    return(
+    <div>
+      <p>
+        Computes statistics for the distribution of a given attribute in a set of polygonal zones for point layer & save the result in a new geonode/geoserver layer
+      </p>
+
+      <p>
+        The output layer carries the same characteristic of the selected polygon layer, It has the same attributes of the polygon layer in addition to another 6 attributes represent the statistics [count, min, max, sum, avg, stddev(standard deviation)]
+      </p>
+
+      <div style={{width:"650px", height:"300px", margin:"30px auto 30px auto"}}>
+        <img src={`/static/${APP_NAME}/images/worldwide categorized thematic map.jpg`} style={{height:"inherit", width:"inherit"}} alt=""/>
+      </div>
+    </div>
+    )
+  }
+
+    // box-shadow: 0px 0px 15px 4px #888885;
   navBar(){
     return(
     <nav className="navbar navbar-default">
@@ -46,6 +73,14 @@ class ConfigForm extends Component {
   render() {
     var {config, step, saved} = this.state
     const steps = [{
+      label: "About",
+      component: AboutPage,
+      props: {
+        onComplete: () => this.updateConfig({}),
+        aboutHeader: this.aboutHeader(),
+        aboutBody: this.aboutBody()
+      }
+    },{
       label: "Select Point Layer",
       component: LayersList,
       props: {
