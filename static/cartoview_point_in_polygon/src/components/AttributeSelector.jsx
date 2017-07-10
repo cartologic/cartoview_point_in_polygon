@@ -2,16 +2,32 @@ import { Component } from 'react';
 import WMSClient from "../gs-client/WMSClient.jsx";
 
 
-class AttributeSelector extends Component {
+export default class AttributeSelector extends Component {
   state = {
     attrs: []
   }
+
+
   componentDidMount(){
     const {layerName} = this.props.config;
     WMSClient.getLayerAttributes(layerName).then((attrs)=>{
       this.setState({attrs});
     });
   }
+
+
+  tip(){
+    return(
+      <div className="panel panel-info" style={{margin: "15px auto 15px auto"}}>
+        <div className="panel-heading">Tip:</div>
+        <div className="panel-body">
+          {this.props.tip}
+        </div>
+      </div>
+    )
+  }
+
+
   render(){
     const {attrs} = this.state;
     if(attrs.length == 0){
@@ -22,8 +38,9 @@ class AttributeSelector extends Component {
       return a.attribute_type.toLowerCase().indexOf("gml:") == 0;
     }
 
-    return <div>
-        <p>Select attribute</p>
+    return(
+      <div>
+        <h4>Select attribute</h4>
         <ul className="list-group">
           {
             attrs.map(a => isGeom(a) || !filter(a) ? null : <li className="list-group-item"  onClick={()=>onComplete(a.attribute)} style={{marginTop: "4px"}}>
@@ -31,7 +48,9 @@ class AttributeSelector extends Component {
             </li>)
           }
         </ul>
-      </div>;
+
+        {this.tip()}
+      </div>
+    )
   }
 }
-export default AttributeSelector;

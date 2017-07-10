@@ -58,12 +58,11 @@ class ConfigForm extends Component {
     )
   }
 
-    // box-shadow: 0px 0px 15px 4px #888885;
   navBar(){
     return(
     <nav className="navbar navbar-default">
       <div className="container">
-        <h4 style={{color:"dimgray"}}>Cartoview Point in Polygon Analysis Tool</h4>
+        <h4 style={{color:"dimgray"}}>Point in Polygon Analysis Tool</h4>
       </div>
     </nav>
     )
@@ -94,7 +93,8 @@ class ConfigForm extends Component {
       component: AttributeSelector,
       props: {
         onComplete: (attribute) => this.updateConfig({attribute}),
-        filter: a => a.attribute_type.toLowerCase() != "xsd:string"
+        filter: a => a.attribute_type.toLowerCase() != "xsd:string",
+        tip: "The numeric type attributes only are selectable to perform the purpose of this app"
       }
     },
     {
