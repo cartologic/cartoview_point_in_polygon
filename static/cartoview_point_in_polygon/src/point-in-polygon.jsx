@@ -51,8 +51,10 @@ class ConfigForm extends Component {
         The output layer carries the same characteristic of the selected polygon layer, It has the same attributes of the polygon layer in addition to another 6 attributes represent the statistics [count, min, max, sum, avg, stddev(standard deviation)]
       </p>
 
-      <div style={{width:"650px", height:"300px", margin:"30px auto 30px auto"}}>
-        <img src={`/static/${APP_NAME}/images/worldwide categorized thematic map.jpg`} style={{height:"inherit", width:"inherit"}} alt=""/>
+      <div className="row">
+        <div className='col-xs-12 col-md-10 col-md-offset-1'>
+          <img className='img-responsive' src={`/static/${APP_NAME}/images/point-in-polygon-example.jpg`} alt="" />
+        </div>
       </div>
     </div>
     )
