@@ -5,7 +5,7 @@ import AboutPage from './components/AboutPage.jsx'
 import LayersList from './components/LayersList.jsx'
 import Navigator from './components/Navigator.jsx'
 import AttributeSelector from './components/AttributeSelector.jsx'
-import NewLayerName from './components/NewLayerName.jsx'
+import NewLayerName from './components/LayerStyles.jsx'
 import Results from './components/Results.jsx'
 
 import "../css/styler.css";
@@ -119,7 +119,8 @@ class ConfigForm extends Component {
             this.setState({successState:false, loading: false})
           }
         },
-        onComplete: ()=>{this.updateConfig({}); this.setState({loading: true});}
+        onComplete: ()=>{this.updateConfig({}); this.setState({loading: true});},
+        layerType:""
       }
     },
     {
