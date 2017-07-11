@@ -1,8 +1,6 @@
 import { Component } from 'react';
 import slugify from 'slugify';
 
-// reactstrap
-import { Button } from 'reactstrap';
 
 export default class GenerateLayer extends Component {
 
@@ -22,12 +20,10 @@ export default class GenerateLayer extends Component {
          "X-CSRFToken": CSRF_TOKEN
        })
      }).then(res => res.json()).then(WPSResponse=>{
-      //  WPSResponse.success && this.props.showResults(true)
-      //  !WPSResponse.success && this.props.showResults(false, WPSResponse.server_response)
       this.props.showResults(WPSResponse)
      })
   }
   render(){
-    return <Button onClick={()=>{this.props.onComplete(); this.onClick();}}>Generate Layer</Button>
+    return <button type="button" class="btn btn-primary" onClick={()=>{this.props.onComplete(); this.onClick();}}>Generate Layer</button>
   }
 }

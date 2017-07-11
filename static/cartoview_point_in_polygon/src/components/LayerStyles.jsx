@@ -1,6 +1,8 @@
 import { Component } from 'react';
 import WMSClient from "../gs-client/WMSClient.jsx";
 
+import slugify from 'slugify';
+
 
 export default class NewLayerName extends Component {
   state = {
@@ -8,9 +10,29 @@ export default class NewLayerName extends Component {
   }
 
 
+  startProcess(){
+    let formValues = this.props.config
+    let form = new FormData();
+    form.append("PointLayer", formValues.layerName);
+    form.append("Attribute", formValues.attribute);
+    form.append("PolygonLayer", formValues.polygonLayerName);
+    form.append("newLayerName", slugify(this.state.title, '_'));
+
+    fetch('generate-layer',{
+      method:"POST",
+       body:form,
+       credentials: "include",
+       headers: new Headers({
+         "X-CSRFToken": CSRF_TOKEN
+       })
+     }).then(res => res.json()).then(WPSResponse=>{
+      this.props.showResults(WPSResponse)
+     })
+  }
+
+
   validateInput(){
     const {title} = this.state;
-    console.log(title);
     if(title.trim() === ""){
       this.setState({error:true, errorMessage: "Enter a valid layer name!"});
     }else if (this.state.LayersTitles.indexOf(title) > -1) {
@@ -18,10 +40,10 @@ export default class NewLayerName extends Component {
     }
 
     else{
-      // this.props.onComplete({styleName:"new", title, error: false})
-      this.setState({error:false}, ()=>{console.log("It is okay -- Go ahead!!");});
+      this.setState({error:false}, ()=>{this.startProcess(); this.props.onComplete()});
     }
   }
+
 
   componentDidMount(){
     let url = `/apps/${APP_NAME}/api/layers/?type=${this.props.layerType}`
@@ -51,7 +73,7 @@ export default class NewLayerName extends Component {
         </div>
 
         <button type="button" className="btn btn-primary"
-          onClick={() => this.validateInput()}
+          onClick={() => {this.validateInput();}}
           style={{marginTop: "5px"}}>
           Next
         </button>
