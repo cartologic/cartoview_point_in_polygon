@@ -1,4 +1,5 @@
-{% extends "app_instance/apps_configuration_base.html" %}
+{% extends "app_manager/app_install_base.html" %}
+<!-- {% extends "app_instance/apps_configuration_base.html"  -->
 {% load bootstrap_tags staticfiles %}
 {% load i18n %}
 
@@ -16,7 +17,8 @@
 {% endblock %}
 
 
-{% block app_configuration %}
+<!-- {% block app_configuration -->
+{% block body %}
   <br>
   <div class="container">
       <div class="row" id="config-form-ct"></div>
