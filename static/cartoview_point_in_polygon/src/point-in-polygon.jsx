@@ -150,9 +150,7 @@ class ConfigForm extends Component {
         label: "Select Polygon Layer",
         component: LayersList,
         props: {
-          onComplete: (layerName) => {
-            this.updateConfig({layerName})
-          },
+          onComplete: (layerName) => this.updateConfig({polygonLayerName: layerName}),
           layerType: "Polygon"
         }
       }, {
