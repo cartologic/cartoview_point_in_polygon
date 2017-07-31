@@ -179,11 +179,13 @@ class ConfigForm extends Component {
               this.setState({successState: false, loading: false})
             }
           },
-          onComplete: () => {
-            this.updateConfig({});
+          onComplete: (outputLayerName) => {
+            this.updateConfig({outputLayerName: outputLayerName});
             this.setState({loading: true});
           },
-          layerType: ""
+          layerType: "",
+          outputLayerName: this.state.config.outputLayerName,
+          onPrevious: () => this.goToStep(step - 1)
         }
       }, {
         label: "Results",
