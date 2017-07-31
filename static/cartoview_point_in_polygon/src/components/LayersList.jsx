@@ -119,11 +119,22 @@ export default class LayersList extends Component {
             ? <button style={{
                 display: "inline-block",
                 margin: "0px 3px 0px 3px"
-              }} className="btn btn-primary btn-sm pull-right" onClick={() => this.props.onComplete(this.state.selectedLayer)}>{"next >>"}</button>
+              }} className="btn btn-primary btn-sm pull-right" onClick={() => this.props.onComplete(this.state.selectedLayer)}>{"Next >>"}</button>
             : <button style={{
               display: "inline-block",
               margin: "0px 3px 0px 3px"
-            }} className="btn btn-primary btn-sm pull-right disabled" onClick={() => this.props.onComplete()}>{"next >>"}</button>}
+            }} className="btn btn-primary btn-sm pull-right disabled" onClick={() => this.props.onComplete()}>{"Next >>"}</button>}
+
+          <button style={this.props.step == 0
+            ? {
+              display: "inline-block",
+              margin: "0px 3px 0px 3px",
+              visibility: 'hidden'
+            }
+            : {
+              display: "inline-block",
+              margin: "0px 3px 0px 3px"
+            }} className="btn btn-primary btn-sm pull-right" onClick={() => this.props.onPrevious()}>{"<< Previous"}</button>
         </div>
       </div>
     )

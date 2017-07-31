@@ -136,22 +136,34 @@ class ConfigForm extends Component {
           onComplete: (layerName) => {
             this.updateConfig({layerName})
           },
-          layerType: "Point"
+          layerType: "Point",
+          step: step
         }
       }, {
         label: "Select Statistics Attribute",
         component: AttributeSelector,
         props: {
-          onComplete: (attribute) => this.updateConfig({attribute}),
+          onComplete: (attribute, index) => this.updateConfig({attribute, selectedAttrIndex: index}),
           filter: a => a.attribute_type.toLowerCase() != "xsd:string",
-          tip: "Statistics attributes are only available for this step"
+          tip: "Statistics attributes are only available for this step",
+          onPrevious: () => {
+            this.setState({
+              step: this.state.step -= 1
+            })
+          },
+          attribute: this.state.config.attribute,
+          index: this.state.config.selectedAttrIndex
         }
       }, {
         label: "Select Polygon Layer",
         component: LayersList,
         props: {
           onComplete: (layerName) => this.updateConfig({polygonLayerName: layerName}),
-          layerType: "Polygon"
+          layerType: "Polygon",
+          step: step,
+          onPrevious: () => {
+            this.goToStep(step - 1)
+          }
         }
       }, {
         label: "Output Layer Name",
