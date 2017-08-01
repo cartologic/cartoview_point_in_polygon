@@ -16,16 +16,29 @@ export default class LayersList extends Component {
       showPagination: true,
       myLayers: true,
       selectedLayerIndex: -1,
-      selectedLayer: ""
+      selectedLayer: "",
+      loading: true
     }
   }
 
   loadLayers(username) {
-    let url = `/apps/${APP_NAME}/api/layers/?type=${this.props.layerType}&${this.state.limit_offset}`
-    if (username)
-      url = `/apps/${APP_NAME}/api/layers/?type=${this.props.layerType}&${this.state.limit_offset}&owner=${username}`
-    fetch(url, {credentials: 'include'}).then((res) => res.json()).then((layers) => {
-      this.setState({layers: layers.objects, next: layers.meta.next, prev: layers.meta.previous, selectedLayerIndex: -1, selectedLayer: ''})
+    this.setState({
+      loading: true
+    }, () => {
+      let url = `/apps/${APP_NAME}/api/layers/?type=${this.props.layerType}&${this.state.limit_offset}`
+      if (username)
+        url = `/apps/${APP_NAME}/api/layers/?type=${this.props.layerType}&${this.state.limit_offset}&owner=${username}`
+
+      fetch(url, {credentials: 'include'}).then((res) => res.json()).then((layers) => {
+        this.setState({
+          layers: layers.objects,
+          next: layers.meta.next,
+          prev: layers.meta.previous,
+          selectedLayerIndex: -1,
+          selectedLayer: '',
+          loading: false
+        })
+      })
     })
   }
 
@@ -119,22 +132,11 @@ export default class LayersList extends Component {
             ? <button style={{
                 display: "inline-block",
                 margin: "0px 3px 0px 3px"
-              }} className="btn btn-primary btn-sm pull-right" onClick={() => this.props.onComplete(this.state.selectedLayer)}>{"Next >>"}</button>
+              }} className="btn btn-primary btn-sm pull-right" onClick={() => this.props.onComplete(this.state.selectedLayer)}>{"next >>"}</button>
             : <button style={{
               display: "inline-block",
               margin: "0px 3px 0px 3px"
-            }} className="btn btn-primary btn-sm pull-right disabled" onClick={() => this.props.onComplete()}>{"Next >>"}</button>}
-
-          <button style={this.props.step == 0
-            ? {
-              display: "inline-block",
-              margin: "0px 3px 0px 3px",
-              visibility: 'hidden'
-            }
-            : {
-              display: "inline-block",
-              margin: "0px 3px 0px 3px"
-            }} className="btn btn-primary btn-sm pull-right" onClick={() => this.props.onPrevious()}>{"<< Previous"}</button>
+            }} className="btn btn-primary btn-sm pull-right disabled" onClick={() => this.props.onComplete()}>{"next >>"}</button>}
         </div>
       </div>
     )
@@ -151,7 +153,7 @@ export default class LayersList extends Component {
           <span style={{
             fontWeight: 500,
             marginRight: 10
-          }}>{'All Layers'}</span>
+          }}>{'Shared Layers'}</span>
           <Switch on={this.state.myLayers} onClick={() => {
             this.handleSwitch()
           }}/>
@@ -231,6 +233,35 @@ export default class LayersList extends Component {
     )
   }
 
+  renderTip1() {
+    return (
+      <div className="panel panel-danger" style={{
+        margin: "15px auto 15px auto"
+      }}>
+        <div className="panel-heading">No Layers</div>
+        <div className="panel-body">
+          <p>You have not created any layers! Please create or upload layers</p>
+          <a className='btn btn-primary pull-right' target="_blank" href='/layers/upload'>Upload a layer</a>
+
+        </div>
+      </div>
+    )
+  }
+  renderTip2() {
+    return (
+      <div className="panel panel-danger" style={{
+        margin: "15px auto 15px auto"
+      }}>
+        <div className="panel-heading">No Layers</div>
+        <div className="panel-body">
+          <p>You don't have layers shared with you! Please create or upload layers</p>
+          <a className='btn btn-primary pull-right' target="_blank" href='/layers/upload'>Upload a layer</a>
+
+        </div>
+      </div>
+    )
+  }
+
   render() {
     const {layers} = this.state;
     const {onComplete} = this.props;
@@ -242,9 +273,13 @@ export default class LayersList extends Component {
         {this.renderSwitchSearch()}
         <br></br>
 
-        {layers.length == 0
+        {this.state.loading == true
           ? <div className="loading"></div>
-          : this.renderLayers()}
+          : this.state.layers.length != 0
+            ? this.renderLayers()
+            : this.state.myLayers
+              ? this.renderTip1()
+              : this.renderTip2()}
 
         <div className="row">
           <div className="col-xs-6 col-xs-offset-4 col-md-2 col-md-offset-5">

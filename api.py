@@ -1,7 +1,7 @@
 from geonode.api.api import ProfileResource
 from geonode.api.authorization import GeoNodeAuthorization
 from geonode.layers.models import Attribute, Layer
-from tastypie.authorization import DjangoAuthorization
+from guardian.shortcuts import get_objects_for_user
 from tastypie.constants import ALL_WITH_RELATIONS
 from tastypie.resources import ModelResource, ALL
 from tastypie import fields
@@ -23,6 +23,8 @@ class LayerResource(ModelResource):
             "owner": ALL_WITH_RELATIONS
         }
 
+    def dehydrate_owner(self, bundle):
+        return {'username': bundle.obj.owner.username, 'id': bundle.obj.owner.id}
 
     # to serialize geometry_type | serialize a new field
     # hint: make a new methode with: dehydrate_new_field(self, bundle)
@@ -44,6 +46,8 @@ class LayerResource(ModelResource):
                 attribute_type__contains=layer_type)))
         if owner:
             filters.update(dict(owner__username=owner))
-
+        else:
+            permitted_ids = get_objects_for_user(request.user, 'base.view_resourcebase').values('id')
+            filters.update(dict(id__in=permitted_ids))
         return  super(LayerResource, self).apply_filters(request, filters)
 
