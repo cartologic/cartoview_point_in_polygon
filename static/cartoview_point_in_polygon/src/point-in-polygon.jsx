@@ -145,7 +145,7 @@ class ConfigForm extends Component {
         props: {
           onComplete: (attribute, index) => this.updateConfig({attribute, selectedAttrIndex: index}),
           filter: a => a.attribute_type.toLowerCase() != "xsd:string",
-          tip: "Statistics attributes are only available for this step",
+          tip: "Numeric attributes are only available for this step",
           onPrevious: () => {
             this.setState({
               step: this.state.step -= 1
