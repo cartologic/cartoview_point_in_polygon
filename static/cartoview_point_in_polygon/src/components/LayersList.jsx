@@ -56,7 +56,13 @@ export default class LayersList extends Component {
         showPagination: true,
         selectedLayerIndex: -1,
         selectedLayer: ""
-      }, () => this.loadLayers())
+      }, () => {
+        if (this.state.myLayers) {
+          this.loadLayers(username)
+        } else {
+          this.loadLayers()
+        }
+      })
     }
   }
 
