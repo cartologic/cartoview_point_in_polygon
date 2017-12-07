@@ -106,7 +106,7 @@ node_modules
 # api.py development phase
 api_dev.py
 
-.DS_Store
+.DS_STORE
 
 
 
