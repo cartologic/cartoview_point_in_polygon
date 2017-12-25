@@ -1,4 +1,4 @@
-import { NextButton, PreviousButton } from './CommonComponents'
+import { Loader, NextButton, PreviousButton } from './CommonComponents'
 
 import { Component } from 'react'
 import React from 'react'
@@ -37,7 +37,9 @@ export default class LayerStyles extends Component {
     this.state = {
       value: {
         title: this.props.outputLayerName ? this.props.outputLayerName : ""
-      }
+      },
+      loading: false,
+      error: false
     }
   }
   startProcess() {
@@ -60,11 +62,23 @@ export default class LayerStyles extends Component {
       }
     } ).catch( err => this.props.showError() )
   }
+  checkLayerNameExist = ( name ) => {
+    const { urls } = this.props
+    this.setState( { loading: true, error: false } )
+    return fetch( `${urls.layersAPI}?typename=geonode:${name}` ).then( response =>
+      response.json() )
+  }
   onComplete = () => {
     const value = this.form.getValue()
     if ( value ) {
-      this.startProcess()
-      this.props.onComplete( this.state.value.title )
+      this.checkLayerNameExist( value.title ).then( response => {
+        if ( response.objects.length == 0 ) {
+          this.startProcess()
+          this.props.onComplete( this.state.value.title )
+        } else {
+          this.setState( { loading: false, error: true } )
+        }
+      } )
     }
   }
   onChange = ( value ) => {
@@ -85,7 +99,8 @@ export default class LayerStyles extends Component {
             <PreviousButton clickAction={() => this.props.onPrevious()} />
           </div>
         </div>
-
+        {!this.state.loading && this.state.error && <p className="text-danger">{"Layer Name already exist please choose another one"}</p>}
+        {this.state.loading && <Loader/>}
         <Form
           ref={(form) => this.form = form}
           value={this.state.value}

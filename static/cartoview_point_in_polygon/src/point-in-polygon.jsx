@@ -208,6 +208,7 @@ class PointInPolygon extends Component {
         label: "Output Layer Name",
         component: NewLayerName,
         props: {
+          urls,
           onChange: (outputLayerName) => this.updateConfig({
             outputLayerName
           }, true),
