@@ -1,96 +1,97 @@
-import {Component} from 'react';
-import WMSClient from "../gs-client/WMSClient.jsx";
+import { NextButton, PreviousButton } from './CommonComponents'
 
-import slugify from 'slugify';
+import { Component } from 'react'
+import React from 'react'
+import { getCRSFToken } from 'Source/helpers/helpers'
+import t from 'tcomb-form'
 
-export default class NewLayerName extends Component {
-  state = {
-    title: this.props.outputLayerName || ''
+const alphaNumericRegex = /(^[a-zA-Z][a-zA-Z0-9_]*)|(^[_][a-zA-Z0-9_]+$)/
+const Form = t.form.Form
+const AlphaNumeric = t.refinement( t.String, ( n ) => {
+  let valid = false
+  if ( n.match( alphaNumericRegex ) ) {
+    valid = true
   }
-
+  return valid
+} )
+AlphaNumeric.getValidationErrorMessage = ( value ) => {
+  if ( !value ) {
+    return 'Required'
+  } else if ( !value.match( alphaNumericRegex ) ) {
+    return 'Only (AlphaNumeric,_) Allowed and numbers not allowed as prefix'
+  }
+}
+const formSchema = t.struct( {
+  title: AlphaNumeric,
+} )
+const options = {
+  fields: {
+    title: {
+      label: "Layer Name"
+    },
+  }
+}
+export default class LayerStyles extends Component {
+  constructor( props ) {
+    super( props )
+    this.state = {
+      value: {
+        title: this.props.outputLayerName ? this.props.outputLayerName : ""
+      }
+    }
+  }
   startProcess() {
     let formValues = this.props.config
-    let form = new FormData();
-    form.append("PointLayer", formValues.layerName);
-    form.append("Attribute", formValues.attribute);
-    form.append("PolygonLayer", formValues.polygonLayerName);
-    form.append("newLayerName", slugify(this.state.title, '_'));
-
-    fetch('generate-layer', {
+    let form = new FormData()
+    form.append( "PointLayer", formValues.layerName )
+    form.append( "Attribute", formValues.attribute )
+    form.append( "PolygonLayer", formValues.polygonLayerName )
+    form.append( "newLayerName", this.state.value.title )
+    fetch( 'generate-layer', {
       method: "POST",
       body: form,
       credentials: "include",
-      headers: new Headers({"X-CSRFToken": CSRF_TOKEN})
-    }).then(res => res.json()).then(WPSResponse => {
-      this.props.showResults(WPSResponse)
-    })
+      headers: new Headers( { "X-CSRFToken": getCRSFToken() } )
+    } ).then( res => res.json() ).then( WPSResponse => {
+      if ( WPSResponse.status >= 400 ) {
+        this.props.showError( WPSResponse.error )
+      } else {
+        this.props.showResults( WPSResponse )
+      }
+    } ).catch( err => this.props.showError() )
   }
-
-  validateInput() {
-    const {title} = this.state;
-    if (title.trim() === "") {
-      this.setState({error: true, errorMessage: "Enter a valid layer name!"});
-    } else if (this.state.LayersTitles.indexOf(title) > -1) {
-      this.setState({error: true, errorMessage: "Layer name is already taken! Please Enter another layer name"});
-    } else {
-      this.setState({
-        error: false
-      }, () => {
-        this.startProcess();
-        this.props.onComplete(this.state.title)
-      });
+  onComplete = () => {
+    const value = this.form.getValue()
+    if ( value ) {
+      this.startProcess()
+      this.props.onComplete( this.state.value.title )
     }
   }
-
-  componentDidMount() {
-    let url = `/apps/${APP_NAME}/api/layers/?type=${this.props.layerType}`
-    fetch(url, {credentials: 'include'}).then((res) => res.json()).then((layers) => {
-      let LayersTitles = layers.objects.map((layer) => {
-        return layer.title
-      })
-      this.setState({LayersTitles})
-    })
+  onChange = ( value ) => {
+    if ( this.state.value.title !== value.title ) {
+      this.setState( { value: { title: value.title } } )
+    }
   }
-
-  renderHeader() {
-    return (
-      <div className="row">
-        <div className="col-xs-5 col-md-4">
-          <h4>{'Layer Name'}</h4>
-        </div>
-        <div className="col-xs-7 col-md-8">
-          <button style={{
-            display: "inline-block",
-            margin: "0px 3px 0px 3px"
-          }} className={"btn btn-primary btn-sm pull-right"} onClick={() => {
-            this.validateInput();
-          }}>{"next >>"}</button>
-
-          <button style={{
-            display: "inline-block",
-            margin: "0px 3px 0px 3px"
-          }} className="btn btn-primary btn-sm pull-right" onClick={() => {
-            this.props.onPrevious()
-          }}>{"<< Previous"}</button>
-        </div>
-      </div>
-    )
-  }
-
   render() {
-    const {title, error, errorMessage} = this.state;
-
-    const {config, onComplete} = this.props;
-
+    const { onComplete } = this.props
     return (
       <div>
-        {this.renderHeader()}
-        <div className={error
-          ? "form-group has-error"
-          : "form-group"}>
-          {error && <label className="control-label" htmlFor="inputError1">{errorMessage}</label>}
-          <input type="text" className="form-control" id="inputError1" placeholder="New Layer Title" value={title} onChange={e => this.setState({title: e.target.value})}/>
+        <div className="row">
+          <div className="col-xs-5 col-md-4">
+            <h4>{'Enter New Layer Name'}</h4>
+          </div>
+          <div className="col-xs-7 col-md-8">
+            <NextButton clickAction={() => this.onComplete()} />
+            <PreviousButton clickAction={() => this.props.onPrevious()} />
+          </div>
         </div>
+
+        <Form
+          ref={(form) => this.form = form}
+          value={this.state.value}
+          type={formSchema}
+          onChange={this.onChange}
+          options={options} />
       </div>
     )
   }

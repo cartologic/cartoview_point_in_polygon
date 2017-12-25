@@ -84,12 +84,11 @@ def generate_layer(request):
     if request.method == "POST":
         point_layer = request.POST['PointLayer']
         polygon_layer = request.POST['PolygonLayer']
-
         # check if user has permission to perform
         qs = _get_permitted_queryset(request, 'base.view_resourcebase')
         if(not qs.filter(typename__in=[point_layer,polygon_layer]).count() == 2):
             # return HttpResponse("User: {} has no permission to perform this process!".format(request.user))
-            return HttpResponse("permission error")
+            return HttpResponse(json.dumps({'error':"permission error"}),content_type="application/json",status_code=405)
 
         attribute = request.POST['Attribute']
         new_feature_layer = request.POST['newLayerName']

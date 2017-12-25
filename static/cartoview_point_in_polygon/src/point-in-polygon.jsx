@@ -1,154 +1,184 @@
-import React, {Component} from 'react'
-import ReactDOM from 'react-dom'
-// components
-import AboutPage from './components/AboutPage.jsx'
-import LayersList from './components/LayersList.jsx'
-import Navigator from './components/Navigator.jsx'
+import "../css/styler.css"
+
+import React, {
+  Component
+} from 'react'
+
 import AttributeSelector from './components/AttributeSelector.jsx'
+import {
+  DefaultModalStyle
+} from './constants/constants.jsx'
+import { ErrorModal } from './components/CommonComponents'
+import LayersList from './components/LayersList.jsx'
+import Modal from 'react-modal'
+import Navigator from './components/Navigator.jsx'
 import NewLayerName from './components/NewLayerName.jsx'
+import PropTypes from 'prop-types'
 import Results from './components/Results.jsx'
+import URLS from 'Source/helpers/URLS'
 
-import {DefaultModalStyle} from './constants/constants.jsx'
-import Modal from 'react-modal';
-
-import "../css/styler.css";
-
-class ConfigForm extends Component {
-  state = {
-    config: {
-      outputLayerName: ""
-    },
-    step: 0,
-    saved: false,
-    loading: true,
-
-    modalIsOpen: false
+// import WPSClient from 'Source/gs-client/WPSClient'
+class PointInPolygon extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      config: {
+        outputLayerName: ""
+      },
+      step: 0,
+      pointLayer: null,
+      polygonLayer: null,
+      saved: false,
+      error: false,
+      errorMessage: "",
+      loading: true,
+      modalIsOpen: false
+    }
+    this.urls = new URLS(this.props.urls)
   }
-
   goToStep(step) {
-    this.setState({step});
+    this.setState({
+      step
+    })
   }
-
   updateConfig(newConfig, sameStep) {
-    var {config, step} = this.state;
-    Object.assign(config, newConfig);
-    if (!sameStep)
-      step++;
-    const saved = false;
-    this.setState({config, step, saved});
+    var {
+      config,
+      step
+    } = this.state
+    Object.assign(config, newConfig)
+    if (!sameStep) {
+      step++
+    }
+    const saved = false
+    this.setState({
+      config,
+      step,
+      saved
+    })
   }
-
   aboutHeader() {
-    return (
-      <h3>Point in Polygon</h3>
-    )
+    return (<h3>{"Point in Polygon"}</h3>)
   }
-
   aboutBody() {
-    return (
-      <div>
-        <p>
-          Computes statistics for the distribution of a given attribute in a set of polygonal zones for point layer & save the result in a new geonode/geoserver layer
-        </p>
+    const { urls } = this.props
+    return <div>
+      <p>
+        {"Computes statistics for the distribution of a given attribute in a set of polygonal zones for point layer & save the result in a new geonode/geoserver layer"}
+      </p>
 
-        <p>
-          The output layer carries the same characteristic of the selected polygon layer, It has the same attributes of the polygon layer in addition to another 6 attributes represent the statistics [count, min, max, sum, avg, stddev(standard deviation)]
-        </p>
-
-        <div className="row">
-          <div className='col-xs-12 col-md-10 col-md-offset-1'>
-            <img className='img-responsive' src={`/static/${APP_NAME}/images/point-in-polygon-example.jpg`} alt=""/>
+      <p>
+        {"The output layer carries the same characteristic of the selected polygon layer, It has the same attributes of the polygon layer in addition to another 6 attributes represent the statistics [count, min, max, sum, avg, stddev(standard deviation)]"}
+      </p>
+      <div className="row">
+        <div className='col-xs-12 col-md-10 col-md-offset-1'>
+          <img className='img-responsive' src={`${urls.appStatic}/images/point-in-polygon-example.jpg`} alt="" />
+        </div>
+      </div>
+    </div>
+  }
+  helpModal() {
+    return <Modal className="modal-dialog" isOpen={this.state.modalIsOpen} style={DefaultModalStyle} onRequestClose={() => { this.setState({ modalIsOpen: false }) }}>
+      <div className="panel panel-default">
+        <div className="panel-heading">
+          <div className="row">
+            <div className="col-xs-6 col-md-6">
+              {this.aboutHeader()}
+            </div>
+            <div className="col-xs-1 col-md-1 col-md-offset-5 col-xs-offset-5">
+              <div className="pull-right">
+                <a className="btn btn btn-primary" onClick={(e) => {
+                  e.preventDefault()
+                  this.setState({ modalIsOpen: false })
+                }}>
+                  {"x"}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="panel-body">
+          <div className="row">
+            <div className="col-md-12">
+              {this.aboutBody()}
+            </div>
           </div>
         </div>
       </div>
-    )
+    </Modal>
   }
-
-  helpModal() {
-    return (
-      <Modal className="modal-dialog" isOpen={this.state.modalIsOpen} style={DefaultModalStyle} onRequestClose={() => {
-        this.setState({modalIsOpen: false})
-      }}>
-        <div className="">
-          <div className="panel panel-default">
-            <div className="panel-heading">
-              <div className="row">
-                <div className="col-xs-6 col-md-6">
-                  {this.aboutHeader()}
-                </div>
-                <div className="col-xs-1 col-md-1 col-md-offset-5 col-xs-offset-5">
-                  <div className="pull-right">
-                    <a className="btn btn btn-primary" onClick={(e) => {
-                      e.preventDefault();
-                      this.setState({modalIsOpen: false})
-                    }}>
-                      x
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="panel-body">
-              <div className="row">
-                <div className="col-md-12">
-                  {this.aboutBody()}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Modal>
-    )
-  }
-
   navBar() {
     return (
-      <nav className="navbar navbar-default">
-        <div className="container">
-          <div className="row">
-            <div className="col-xs-6 col-md-6">
-              <h4 style={{
-                color: "dimgray"
-              }}>Point in Polygon</h4>
-            </div>
-            <div className="col-xs-1 col-md-1 col-md-offset-5 col-xs-offset-4">
-              <button type="button" style={{
-                marginTop: "8%"
-              }} className="btn btn-primary" onClick={() => {
-                this.setState({modalIsOpen: true})
-              }}>
-                ?
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <div className="flex-element styler-nav">
+        <h4>{"Point in Polygon"}</h4>
+        <div className="fill-empty"></div>
+        <button type="button" className="btn btn-primary" onClick={() => {
+          this.setState({ modalIsOpen: true })
+        }}>
+          {"?"}
+        </button>
+
+      </div>
     )
   }
-
+  // checkIntersection = () => {
+  //   const { urls } = this.props
+  //   const { pointLayer, polygonLayer } = this.state
+  //   const proxiedURL = this.urls.getProxiedURL( urls.wpsURL )
+  //   WPSClient.gsIntersection( urls.wpsURL, polygonLayer.typename, pointLayer.typename )
+  //     .then( result => {
+  //       let valid = false
+  //       if ( result.features.length > 0 ) {
+  //         valid = true
+  //       }
+  //       return valid
+  //     } )
+  // }
   render() {
-    var {config, step, saved} = this.state
+    var {
+      config,
+      step,
+      saved,
+      errorMessage,
+      error,
+      pointLayer,
+      polygonLayer
+    } = this.state
+    const {
+      username,
+      urls
+    } = this.props
     const steps = [
       {
         label: "Select Point Layer",
         component: LayersList,
         props: {
-          onComplete: (layerName) => {
-            this.updateConfig({layerName})
+          onComplete: (layer) => {
+            this.setState({
+              pointLayer: layer
+            })
+            this.updateConfig({
+              layerName: layer.typename
+            })
           },
           layerType: "Point",
-          step: step
+          username,
+          urls,
+          currentLayer: pointLayer
         }
       }, {
         label: "Select Statistics Attribute",
         component: AttributeSelector,
         props: {
-          onComplete: (attribute, index) => this.updateConfig({attribute, selectedAttrIndex: index}),
+          onComplete: (attribute, index) => this.updateConfig({
+            attribute,
+            selectedAttrIndex: index
+          }),
           filter: a => a.attribute_type.toLowerCase() != "xsd:string",
           tip: "Numeric attributes are only available for this step",
           onPrevious: () => {
             this.setState({
-              step: this.state.step -= 1
+              step: this.state.step - 1
             })
           },
           attribute: this.state.config.attribute,
@@ -158,8 +188,17 @@ class ConfigForm extends Component {
         label: "Select Polygon Layer",
         component: LayersList,
         props: {
-          onComplete: (layerName) => this.updateConfig({polygonLayerName: layerName}),
+          onComplete: (layer) => {
+            this.setState({
+              polygonLayer: layer
+            }, () => this.updateConfig({
+              polygonLayerName: layer.typename
+            }))
+          },
           layerType: "Polygon",
+          username,
+          currentLayer: polygonLayer,
+          urls,
           step: step,
           onPrevious: () => {
             this.goToStep(step - 1)
@@ -172,16 +211,34 @@ class ConfigForm extends Component {
           onChange: (outputLayerName) => this.updateConfig({
             outputLayerName
           }, true),
+          showError: (errorMessage =
+            "Something went wrong in our backend") => {
+            this.setState({
+              error: true,
+              errorMessage
+            })
+          },
           showResults: (WPSResponse) => {
             if (WPSResponse.success) {
-              this.setState({successState: true, typeName: WPSResponse.type_name, loading: false})
+              this.setState({
+                successState: true,
+                typeName: WPSResponse.type_name,
+                loading: false
+              })
             } else {
-              this.setState({successState: false, loading: false})
+              this.setState({
+                successState: false,
+                loading: false
+              })
             }
           },
           onComplete: (outputLayerName) => {
-            this.updateConfig({outputLayerName: outputLayerName});
-            this.setState({loading: true});
+            this.updateConfig({
+              outputLayerName: outputLayerName
+            })
+            this.setState({
+              loading: true
+            })
           },
           layerType: "",
           outputLayerName: this.state.config.outputLayerName,
@@ -196,25 +253,32 @@ class ConfigForm extends Component {
           loading: this.state.loading
         }
       }
-    ];
-
+    ]
     return (
       <div className="col-md-12">
         {this.helpModal()}
         <div className="row">{this.navBar()}</div>
+        <hr />
+        <ErrorModal open={error} error={errorMessage} onRequestClose={() => this.setState({ error: false })} />
+        <div className="flex-element styler-nav current-info">
+          {pointLayer && <a target="_blank" href={`${pointLayer.detail_url}`}>{`Point Layer: ${pointLayer.title}`}</a>}
+          {config && config.attribute && <span>{`Attribute: ${config.attribute}`}</span>}
+          {polygonLayer && <a target="_blank" href={`${polygonLayer.detail_url}`}>{`Polygon Layer: ${polygonLayer.title}`}</a>}
+        </div>
+        {(pointLayer || config.title) && <hr />}
         <div className="row">
-          <Navigator steps={steps} step={step} onStepSelected={(step) => this.goToStep(step)}/>
+          <Navigator steps={steps} step={step} onStepSelected={(step) => this.goToStep(step)} />
           <div className="col-md-9">
-            {steps.map((s, index) => index == step && <s.component {...s.props} config={config}/>)
-}
+            {steps.map((s, index) => index == step && <s.component {...s.props} config={config} />)
+            }
           </div>
         </div>
       </div>
     )
   }
 }
-
-global.ConfigForm = ConfigForm;
-global.React = React;
-global.ReactDOM = ReactDOM;
-export default ConfigForm;
+PointInPolygon.propTypes = {
+  username: PropTypes.string.isRequired,
+  urls: PropTypes.object.isRequired
+}
+export default PointInPolygon
