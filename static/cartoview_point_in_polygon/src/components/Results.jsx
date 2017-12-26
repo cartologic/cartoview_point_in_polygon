@@ -1,8 +1,5 @@
-import {Component} from 'react';
-
+import { Component } from 'react';
 // using reactstrap Forms
-import {Alert} from 'reactstrap';
-
 export default class Results extends Component {
   note() {
     return (
@@ -34,24 +31,19 @@ export default class Results extends Component {
       </div>
     )
   }
-
   render() {
-    const {successState, typeName, loading} = this.props;
-
+    const { successState, typeName, loading } = this.props;
     // loading
-    if (loading)
-      return <div style={{
+    if ( loading ) return <div style={{
         margin: "10% auto auto"
       }} className="loading"></div>
-
     else {
       // Success !!!
-      if (successState) {
+      if ( successState ) {
         return this.note()
       }
-
       // Failure !!!
-      if (!successState) {
+      if ( !successState ) {
         return (
           <div className="panel panel-danger">
             <div className="panel-heading">Process Faild</div>
@@ -66,6 +58,5 @@ export default class Results extends Component {
         )
       }
     }
-
   }
 }

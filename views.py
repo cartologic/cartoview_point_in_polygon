@@ -27,7 +27,7 @@ def index(request):
     request = request
     context = {
         "v": __version__,
-        "pnppath":"http://"+request.get_host(),
+        "pnppath": "http://" + request.get_host(),
         "ogc": ogc_server_settings.LOCATION,
         "APP_NAME": APP_NAME,
         "username": request.user
@@ -86,13 +86,15 @@ def generate_layer(request):
         polygon_layer = request.POST['PolygonLayer']
         # check if user has permission to perform
         qs = _get_permitted_queryset(request, 'base.view_resourcebase')
-        if(not qs.filter(typename__in=[point_layer,polygon_layer]).count() == 2):
+        if(not qs.filter(typename__in=[point_layer, polygon_layer]).count() == 2):
             # return HttpResponse("User: {} has no permission to perform this process!".format(request.user))
-            return HttpResponse(json.dumps({'error':"permission error"}),content_type="application/json",status_code=405)
+            return HttpResponse(json.dumps({'error': "permission error"}),
+                                content_type="application/json",
+                                status=405)
 
         attribute = request.POST['Attribute']
         new_feature_layer = request.POST['newLayerName']
-        url = geoserver_url+"wps"
+        url = geoserver_url + "wps"
 
         # using template litral instead of concatinating strings with new lines
         payload = xml = """
@@ -185,8 +187,7 @@ def generate_layer(request):
         headers = {
             'content-type': "application/xml",
             'cache-control': "no-cache",
-            }
-
+        }
 
         response = requests.request("POST", url, data=payload, headers=headers)
 
@@ -194,9 +195,14 @@ def generate_layer(request):
         new_layer_name = response.text.split(':').pop(1)
         if new_layer_name == new_feature_layer:
             resource = gs_catalog.get_resource(new_layer_name)
-            type_name = "%s:%s" % (resource.workspace.name.encode('utf-8'), resource.name.encode('utf-8'))
+            type_name = "%s:%s" % (resource.workspace.name.encode(
+                'utf-8'), resource.name.encode('utf-8'))
             update_geonode(request, resource)
             # return HttpResponse("Success!!\n" + response.text + ' has been created')
-            return HttpResponse(json.dumps({'type_name':type_name, 'success': True}), content_type="application/json")
+            return HttpResponse(json.dumps({'type_name': type_name,
+                                            'success': True}),
+                                content_type="application/json", status=200)
         else:
-            return HttpResponse(json.dumps({'success': False, 'server_response': response.text}), content_type="application/json")
+            return HttpResponse(json.dumps({'success': False,
+                                            'server_response': response.text}),
+                                content_type="application/json", status=500)

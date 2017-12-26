@@ -15,12 +15,9 @@ import Navigator from './components/Navigator.jsx'
 import NewLayerName from './components/NewLayerName.jsx'
 import PropTypes from 'prop-types'
 import Results from './components/Results.jsx'
-import URLS from 'Source/helpers/URLS'
-
-// import WPSClient from 'Source/gs-client/WPSClient'
 class PointInPolygon extends Component {
-  constructor(props) {
-    super(props)
+  constructor( props ) {
+    super( props )
     this.state = {
       config: {
         outputLayerName: ""
@@ -34,31 +31,30 @@ class PointInPolygon extends Component {
       loading: true,
       modalIsOpen: false
     }
-    this.urls = new URLS(this.props.urls)
   }
-  goToStep(step) {
-    this.setState({
+  goToStep( step ) {
+    this.setState( {
       step
-    })
+    } )
   }
-  updateConfig(newConfig, sameStep) {
+  updateConfig( newConfig, sameStep ) {
     var {
       config,
       step
     } = this.state
-    Object.assign(config, newConfig)
-    if (!sameStep) {
+    Object.assign( config, newConfig )
+    if ( !sameStep ) {
       step++
     }
     const saved = false
-    this.setState({
+    this.setState( {
       config,
       step,
       saved
-    })
+    } )
   }
   aboutHeader() {
-    return (<h3>{"Point in Polygon"}</h3>)
+    return ( <h3>{"Point in Polygon"}</h3> )
   }
   aboutBody() {
     const { urls } = this.props
@@ -121,19 +117,6 @@ class PointInPolygon extends Component {
       </div>
     )
   }
-  // checkIntersection = () => {
-  //   const { urls } = this.props
-  //   const { pointLayer, polygonLayer } = this.state
-  //   const proxiedURL = this.urls.getProxiedURL( urls.wpsURL )
-  //   WPSClient.gsIntersection( urls.wpsURL, polygonLayer.typename, pointLayer.typename )
-  //     .then( result => {
-  //       let valid = false
-  //       if ( result.features.length > 0 ) {
-  //         valid = true
-  //       }
-  //       return valid
-  //     } )
-  // }
   render() {
     var {
       config,
@@ -153,13 +136,13 @@ class PointInPolygon extends Component {
         label: "Select Point Layer",
         component: LayersList,
         props: {
-          onComplete: (layer) => {
-            this.setState({
+          onComplete: ( layer ) => {
+            this.setState( {
               pointLayer: layer
-            })
-            this.updateConfig({
+            } )
+            this.updateConfig( {
               layerName: layer.typename
-            })
+            } )
           },
           layerType: "Point",
           username,
@@ -170,16 +153,16 @@ class PointInPolygon extends Component {
         label: "Select Statistics Attribute",
         component: AttributeSelector,
         props: {
-          onComplete: (attribute, index) => this.updateConfig({
+          onComplete: ( attribute, index ) => this.updateConfig( {
             attribute,
             selectedAttrIndex: index
-          }),
+          } ),
           filter: a => a.attribute_type.toLowerCase() != "xsd:string",
           tip: "Numeric attributes are only available for this step",
           onPrevious: () => {
-            this.setState({
+            this.setState( {
               step: this.state.step - 1
-            })
+            } )
           },
           attribute: this.state.config.attribute,
           index: this.state.config.selectedAttrIndex
@@ -188,12 +171,12 @@ class PointInPolygon extends Component {
         label: "Select Polygon Layer",
         component: LayersList,
         props: {
-          onComplete: (layer) => {
-            this.setState({
+          onComplete: ( layer ) => {
+            this.setState( {
               polygonLayer: layer
-            }, () => this.updateConfig({
+            }, () => this.updateConfig( {
               polygonLayerName: layer.typename
-            }))
+            } ) )
           },
           layerType: "Polygon",
           username,
@@ -201,7 +184,7 @@ class PointInPolygon extends Component {
           urls,
           step: step,
           onPrevious: () => {
-            this.goToStep(step - 1)
+            this.goToStep( step - 1 )
           }
         }
       }, {
@@ -209,41 +192,41 @@ class PointInPolygon extends Component {
         component: NewLayerName,
         props: {
           urls,
-          onChange: (outputLayerName) => this.updateConfig({
+          onChange: ( outputLayerName ) => this.updateConfig( {
             outputLayerName
-          }, true),
-          showError: (errorMessage =
-            "Something went wrong in our backend") => {
-            this.setState({
+          }, true ),
+          showError: ( errorMessage =
+            "Something went wrong in our backend" ) => {
+            this.setState( {
               error: true,
               errorMessage
-            })
+            } )
           },
-          showResults: (WPSResponse) => {
-            if (WPSResponse.success) {
-              this.setState({
+          showResults: ( WPSResponse ) => {
+            if ( WPSResponse.success ) {
+              this.setState( {
                 successState: true,
                 typeName: WPSResponse.type_name,
                 loading: false
-              })
+              } )
             } else {
-              this.setState({
+              this.setState( {
                 successState: false,
                 loading: false
-              })
+              } )
             }
           },
-          onComplete: (outputLayerName) => {
-            this.updateConfig({
+          onComplete: ( outputLayerName ) => {
+            this.updateConfig( {
               outputLayerName: outputLayerName
-            })
-            this.setState({
+            } )
+            this.setState( {
               loading: true
-            })
+            } )
           },
           layerType: "",
           outputLayerName: this.state.config.outputLayerName,
-          onPrevious: () => this.goToStep(step - 1)
+          onPrevious: () => this.goToStep( step - 1 )
         }
       }, {
         label: "Results",
