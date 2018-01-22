@@ -30,7 +30,7 @@
   {% else %}
       const PROXY_URL=null
   {% endif %}
-  const appManagerRest="{% url 'app_manager_base_url' %}rest/app_manager/"
+  const appManagerRest="/api/"
   const URLS = {
     geoserver: "{{ GEOSERVER_BASE_URL }}",
     geoserverRestProxy: "proxy/geoserver/rest",
