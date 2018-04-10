@@ -5,11 +5,12 @@ import React from 'react'
 import { getCRSFToken } from 'Source/helpers/helpers'
 import t from 'tcomb-form'
 
-const alphaNumericRegex = /(^[a-zA-Z][a-zA-Z0-9_]*)|(^[_][a-zA-Z0-9_]+$)/
+const alphaNumericRegex = /(^[A-Za-z0-9_]+$)/
+const regx = RegExp('^[A-Za-z0-9_]+$')
 const Form = t.form.Form
 const AlphaNumeric = t.refinement( t.String, ( n ) => {
   let valid = false
-  if ( n.match( alphaNumericRegex ) ) {
+  if ( regx.test(n)) {
     valid = true
   }
   return valid
@@ -65,7 +66,7 @@ export default class LayerStyles extends Component {
   checkLayerNameExist = ( name ) => {
     const { urls } = this.props
     this.setState( { loading: true, error: false } )
-    return fetch( `${urls.layersAPI}?typename=geonode:${name}` ).then( response =>
+    return fetch( `${urls.layersAPI}?typename=${this.props.workspace}:${name}` ).then( response =>
       response.json() )
   }
   onComplete = () => {
