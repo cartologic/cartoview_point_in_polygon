@@ -13,13 +13,21 @@ const AlphaNumeric = t.refinement( t.String, ( n ) => {
   if ( regx.test(n)) {
     valid = true
   }
+  if(n.length > 63){
+    valid = false
+  }
   return valid
 } )
 AlphaNumeric.getValidationErrorMessage = ( value ) => {
   if ( !value ) {
     return 'Required'
-  } else if ( !value.match( alphaNumericRegex ) ) {
-    return 'Only (AlphaNumeric,_) Allowed and numbers not allowed as prefix'
+  } else {
+    if ( !value.match( alphaNumericRegex ) ) {
+      return 'Only (AlphaNumeric,_) Allowed and numbers not allowed as prefix'
+    }
+    if(value.length > 63){
+      return "Layer name cannot exceed the limit of 63 characters!"
+    }
   }
 }
 const formSchema = t.struct( {
