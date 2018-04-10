@@ -129,7 +129,8 @@ class PointInPolygon extends Component {
     } = this.state
     const {
       username,
-      urls
+      urls,
+      workspace
     } = this.props
     const steps = [
       {
@@ -191,6 +192,7 @@ class PointInPolygon extends Component {
         label: "Output Layer Name",
         component: NewLayerName,
         props: {
+          workspace,
           urls,
           onChange: ( outputLayerName ) => this.updateConfig( {
             outputLayerName
