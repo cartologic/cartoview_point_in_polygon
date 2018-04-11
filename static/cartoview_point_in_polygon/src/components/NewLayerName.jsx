@@ -1,8 +1,10 @@
 import { Loader, NextButton, PreviousButton } from './CommonComponents'
 
 import { Component } from 'react'
+import { ErrorModal } from '../components/CommonComponents'
 import React from 'react'
 import { getCRSFToken } from 'Source/helpers/helpers'
+import getIntersectionsCount from 'Source/helpers/layerIntersections'
 import t from 'tcomb-form'
 
 const alphaNumericRegex = /(^[A-Za-z0-9_]+$)/
@@ -51,6 +53,11 @@ export default class LayerStyles extends Component {
       error: false
     }
   }
+  componentDidMount(){
+    this.setState({loading: true}, (
+      this.isIntersected()
+    ))
+  }
   startProcess() {
     let formValues = this.props.config
     let form = new FormData()
@@ -95,28 +102,58 @@ export default class LayerStyles extends Component {
       this.setState( { value: { title: value.title } } )
     }
   }
+  isIntersected = () => {
+    const settings = {
+      url: this.props.urls.proxy+this.props.urls.wpsURL,
+      CRSFToken: getCRSFToken(),
+      polygonLayer: this.props.config.polygonLayerName,
+      pointLayer: this.props.config.layerName
+    }
+    getIntersectionsCount(settings)
+    .then(count => {
+      if (count > 0) this.setState({loading: false, isIntersected: true})
+      else this.setState({loading: false, isIntersected: false})
+    })
+  }
+  renderIntersectionMessage =()=>{
+    return(
+      <div>
+        <p>It seems the selected layers are not intersected! You can continue and ignore or step back and select two different layers </p>
+        <button className="btn btn-warning" style={{margin: '5px 20px'}} onClick={()=>{this.setState({isIntersected: true})}}>Continue any way</button>
+        <button className="btn btn-primary" style={{margin: '5px 20px'}} onClick={()=>{this.setState({isIntersected: true}, ()=>{this.props.onPrevious()})}}>Step Back</button>
+      </div>
+    )
+  }
   render() {
     const { onComplete } = this.props
-    return (
-      <div>
-        <div className="row">
-          <div className="col-xs-5 col-md-4">
-            <h4>{'Enter New Layer Name'}</h4>
+    if(this.state.loading){
+      return <Loader />
+    }
+    if(this.state.isIntersected){
+      return (
+        <div>
+          <div className="row">
+            <div className="col-xs-5 col-md-4">
+              <h4>{'Enter New Layer Name'}</h4>
+            </div>
+            <div className="col-xs-7 col-md-8">
+              <NextButton clickAction={() => this.onComplete()} />
+              <PreviousButton clickAction={() => this.props.onPrevious()} />
+            </div>
           </div>
-          <div className="col-xs-7 col-md-8">
-            <NextButton clickAction={() => this.onComplete()} />
-            <PreviousButton clickAction={() => this.props.onPrevious()} />
-          </div>
+          {!this.state.loading && this.state.error && <p className="text-danger">{"Layer Name already exist please choose another one"}</p>}
+          {this.state.loading && <Loader/>}
+          <Form
+            ref={(form) => this.form = form}
+            value={this.state.value}
+            type={formSchema}
+            onChange={this.onChange}
+            options={options} />
         </div>
-        {!this.state.loading && this.state.error && <p className="text-danger">{"Layer Name already exist please choose another one"}</p>}
-        {this.state.loading && <Loader/>}
-        <Form
-          ref={(form) => this.form = form}
-          value={this.state.value}
-          type={formSchema}
-          onChange={this.onChange}
-          options={options} />
-      </div>
+      )
+    }
+    return(
+      <ErrorModal open={!this.state.isIntersected} error={this.renderIntersectionMessage()} onRequestClose={() => this.setState({ isIntersected: true })} />
     )
   }
 }
