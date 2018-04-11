@@ -70,7 +70,7 @@ export const ErrorModal=(props)=> {
                     <div className="panel-body">
                         <div className="row">
                             <div className="col-md-12 text-center text-danger">
-                                <p>{error}</p>
+                                <div>{error}</div>
                             </div>
                         </div>
                     </div>
