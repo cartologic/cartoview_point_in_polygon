@@ -15,6 +15,25 @@ import Navigator from './components/Navigator.jsx'
 import NewLayerName from './components/NewLayerName.jsx'
 import PropTypes from 'prop-types'
 import Results from './components/Results.jsx'
+
+const numericTypes = [
+  'xsd:byte',
+  'xsd:decimal',
+  'xsd:double',
+  'xsd:int',
+  'xsd:integer',
+  'xsd:long',
+  'xsd:negativeInteger',
+  'xsd:nonNegativeInteger',
+  'xsd:nonPositiveInteger',
+  'xsd:positiveInteger',
+  'xsd:short',
+  'xsd:unsignedLong',
+  'xsd:unsignedInt',
+  'xsd:unsignedShort',
+  'xsd:unsignedByte'
+]
+
 class PointInPolygon extends Component {
   constructor( props ) {
     super( props )
@@ -158,7 +177,8 @@ class PointInPolygon extends Component {
             attribute,
             selectedAttrIndex: index
           } ),
-          filter: a => a.attribute_type.toLowerCase() != "xsd:string",
+          // filter and pass only the numericTypes
+          filter: a =>  numericTypes.indexOf(a.attribute_type) == -1 ? false : true,
           tip: "Numeric attributes are only available for this step",
           onPrevious: () => {
             this.setState( {
