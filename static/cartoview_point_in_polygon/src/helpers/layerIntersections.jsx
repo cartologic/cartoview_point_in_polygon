@@ -67,8 +67,10 @@ const getPayLoad = function(polygon, point) {
 /**
  *  returns features count of two intersected feature collections(layers). * 
  * @return {Promise<Number>} featuresCount - promise carries features count.
+ * @return {Promise<Error>} xmlResponse - returns xml response from geoserver if res.json() has errors
  */
 const intersectedFeaturesCount = function(settings) {
+  let xmlResponse;
   return fetch(settings.url, {
     headers: new Headers({
       "content-type": "text/xml",
@@ -78,7 +80,11 @@ const intersectedFeaturesCount = function(settings) {
     credentials: "include",
     body: getPayLoad(settings.polygonLayer, settings.pointLayer)
   })
-    .then(res => res.json())
+    .then(res => {
+      xmlResponse = res.clone()
+      return res.json()
+    })
+    .catch(error => Promise.reject(xmlResponse))
     .then(data => data.features.length)
 }
 
