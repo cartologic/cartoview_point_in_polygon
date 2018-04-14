@@ -129,7 +129,7 @@ def generate_layer(request):
                               <p0:Body>
                                 <p2:GetFeature
                                   xmlns:p2="http://www.opengis.net/wfs" service="WFS" version="1.1.0" outputFormat="GML2">
-                                  <p2:Query typeName="{}" srsName="EPSG:4326"/>
+                                  <p2:Query typeName="{}"/>
                                 </p2:GetFeature>
                               </p0:Body>
                             </p0:Reference>
@@ -151,7 +151,7 @@ def generate_layer(request):
                               <p0:Body>
                                 <p4:GetFeature
                                   xmlns:p4="http://www.opengis.net/wfs" service="WFS" version="1.1.0" outputFormat="GML2">
-                                  <p4:Query typeName="{}" srsName="EPSG:4326"/>
+                                  <p4:Query typeName="{}"/>
                                 </p4:GetFeature>
                               </p0:Body>
                             </p0:Reference>
