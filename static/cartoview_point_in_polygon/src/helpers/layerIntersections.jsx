@@ -72,12 +72,10 @@ const intersectedFeaturesCount = function(settings) {
   return fetch(settings.url, {
     headers: new Headers({
       "content-type": "text/xml",
-      "cache-control": "no-cache",
       "X-CSRFToken": settings.CRSFToken
     }),
     method: "POST",
-    cache: "no-cache",
-    credentials: "same-origin",
+    credentials: "include",
     body: getPayLoad(settings.polygonLayer, settings.pointLayer)
   })
     .then(res => res.json())
