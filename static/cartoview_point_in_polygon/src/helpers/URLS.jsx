@@ -32,7 +32,7 @@ class URLS {
   getProxiedURL = ( url ) => {
     const proxy = this.urls.proxy
     let proxiedURL = url
-    if ( proxy ) {
+    if ( proxy && proxy.split(' ').joit('') != '') {
       proxiedURL = this.urls.proxy + this.encodeURL( url )
     }
     return proxiedURL

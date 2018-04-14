@@ -28,7 +28,7 @@
   {% if PROXY_URL %}
       const PROXY_URL='{{PROXY_URL}}'
   {% else %}
-      const PROXY_URL=null
+      const PROXY_URL=""
   {% endif %}
   const appManagerRest="{% url 'app_manager_base_url' %}rest/app_manager/"
   const URLS = {
