@@ -50,7 +50,8 @@ export default class LayerStyles extends Component {
         title: this.props.outputLayerName ? this.props.outputLayerName : ""
       },
       loading: false,
-      error: false
+      error: false,
+      intersectionError: false
     }
   }
   componentDidMount(){
@@ -114,6 +115,10 @@ export default class LayerStyles extends Component {
       if (count > 0) this.setState({loading: false, isIntersected: true})
       else this.setState({loading: false, isIntersected: false})
     })
+    .catch(error => {
+      error.text()
+      .then (xmlError => this.setState({loading: false, intersectionError: true, xmlError: xmlError}))
+    })
   }
   renderIntersectionMessage =()=>{
     return(
@@ -124,10 +129,25 @@ export default class LayerStyles extends Component {
       </div>
     )
   }
+  renderIntersectionError = (xmlError) =>{
+    return (
+      <div>
+      <p>Unexpected Error while checking the intersection of the selected layers, Continue any way may cause unexpected results </p>
+      <p className={'geoserver-xml-error'}>${xmlError}</p>
+      <button className="btn btn-warning" style={{margin: '5px 20px'}} onClick={()=>{this.setState({intersectionError:false, isIntersected: true})}}>Continue any way</button>
+      <button className="btn btn-primary" style={{margin: '5px 20px'}} onClick={()=>{this.setState({intersectionError:false, isIntersected: true}, ()=>{this.props.onPrevious()})}}>Step Back</button>
+    </div>
+    )
+  } 
   render() {
     const { onComplete } = this.props
     if(this.state.loading){
       return <Loader />
+    }
+    if(this.state.intersectionError){
+      return (
+        <ErrorModal open={this.state.intersectionError} error={this.renderIntersectionError(this.state.xmlError)} onRequestClose={() => this.setState({ intersectionError: false, isIntersected: true })} />
+      )
     }
     if(this.state.isIntersected){
       return (
