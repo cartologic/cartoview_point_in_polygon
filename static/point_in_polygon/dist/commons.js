@@ -141,7 +141,7 @@
 /******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
 /******/
 /******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "/static/cartoview_point_in_polygon/";
+/******/ 	__webpack_require__.p = "/static//home/khaledboka/cartoview/map_ground/portals/apps/point_in_polygon/static/point_in_polygon/";
 /******/
 /******/ 	// on error function for async loading
 /******/ 	__webpack_require__.oe = function(err) { console.error(err); throw err; };

@@ -55,8 +55,8 @@
   const username = '{{username}}'
   const workspace = "{{workspace}}"
 </script>
-  <script src="{{ STATIC_URL }}cartoview_point_in_polygon/dist/commons.js?v={{v}}"></script>
-  <script src="{{ STATIC_URL }}cartoview_point_in_polygon/dist/PNP.bundle.js?v={{v}}"></script>  
+  <script src="{{ STATIC_URL }}{{APP_NAME}}/dist/commons.js?v={{v}}"></script>
+  <script src="{{ STATIC_URL }}{{APP_NAME}}/dist/PNP.bundle.js?v={{v}}"></script>  
   <script type="text/javascript">
     var viewer= new Viewer("config-form-ct",username,URLS, workspace)
     viewer.view()
