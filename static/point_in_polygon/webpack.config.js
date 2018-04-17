@@ -29,7 +29,7 @@ const config = {
         libraryTarget: 'umd',
         umdNamedDefine: true,
         chunkFilename: '[name]-chunk.js',
-        publicPath: "/static/cartoview_point_in_polygon/"
+        publicPath: "/static/"+__dirname+'/'
     },
     node: {
         fs: "empty"

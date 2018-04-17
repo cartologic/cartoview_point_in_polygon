@@ -172,7 +172,7 @@ export default class LayersList extends Component {
                                       <p className="mb-1">{`${layer.abstract.substring(0, 140)} ...`}</p>
                                       <p>{`Owner: ${layer.owner__username}`}</p>
 
-                                      <a type="button" href={`/layers/${layer.typename}`} target="_blank" className="btn btn-primary pull-right card-details-button" >
+                                      <a type="button" href={layer.detail_url} target="_blank" className="btn btn-primary pull-right card-details-button" >
                                           {"Layer Details"}
                                       </a>
                                   </div>

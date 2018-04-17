@@ -14,6 +14,8 @@ from geonode.layers.models import Layer, Attribute
 from geonode.geoserver.helpers import ogc_server_settings
 from geoserver.catalog import Catalog
 
+from django.conf import settings
+
 from . import APP_NAME, __version__
 
 
@@ -30,7 +32,8 @@ def index(request):
         "pnppath": "http://" + request.get_host(),
         "ogc": ogc_server_settings.LOCATION,
         "APP_NAME": APP_NAME,
-        "username": request.user
+        "username": request.user,
+        "workspace": getattr(settings, "DEFAULT_WORKSPACE", None)
     }
     return render(request, "%s/index.html" % APP_NAME, context)
 
@@ -126,7 +129,7 @@ def generate_layer(request):
                               <p0:Body>
                                 <p2:GetFeature
                                   xmlns:p2="http://www.opengis.net/wfs" service="WFS" version="1.1.0" outputFormat="GML2">
-                                  <p2:Query typeName="{}" srsName="EPSG:4326"/>
+                                  <p2:Query typeName="{}"/>
                                 </p2:GetFeature>
                               </p0:Body>
                             </p0:Reference>
@@ -148,7 +151,7 @@ def generate_layer(request):
                               <p0:Body>
                                 <p4:GetFeature
                                   xmlns:p4="http://www.opengis.net/wfs" service="WFS" version="1.1.0" outputFormat="GML2">
-                                  <p4:Query typeName="{}" srsName="EPSG:4326"/>
+                                  <p4:Query typeName="{}"/>
                                 </p4:GetFeature>
                               </p0:Body>
                             </p0:Reference>
@@ -167,6 +170,14 @@ def generate_layer(request):
                 </p0:Input>
                 <p0:Input>
                   <p1:Identifier
+                    xmlns:p1="http://www.opengis.net/ows/1.1">workspace
+                  </p1:Identifier>
+                  <p0:Data>
+                    <p0:LiteralData>{}</p0:LiteralData>
+                  </p0:Data>
+                </p0:Input>
+                <p0:Input>
+                  <p1:Identifier
                     xmlns:p1="http://www.opengis.net/ows/1.1">name
                   </p1:Identifier>
                   <p0:Data>
@@ -182,7 +193,7 @@ def generate_layer(request):
                 </p0:RawDataOutput>
               </p0:ResponseForm>
             </p0:Execute>
-        """.format(point_layer, attribute, polygon_layer, new_feature_layer)
+        """.format(point_layer, attribute, polygon_layer, settings.DEFAULT_WORKSPACE, new_feature_layer)
 
         headers = {
             'content-type': "application/xml",
