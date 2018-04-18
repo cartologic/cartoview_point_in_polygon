@@ -44,6 +44,7 @@
         {% else %}
         wfsURL : "{{ GEOSERVER_BASE_URL }}wfs",
         wmsURL : "{{ GEOSERVER_BASE_URL }}wms",
+        wpsURL : "{{ GEOSERVER_BASE_URL }}wps",        
     {% endif %}
     static: "{{ STATIC_URL }}",
     appStatic: "{{ STATIC_URL }}{{APP_NAME}}",
