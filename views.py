@@ -97,7 +97,11 @@ def generate_layer(request):
 
         attribute = request.POST['Attribute']
         new_feature_layer = request.POST['newLayerName']
-        url = geoserver_url + "wps"
+        if 'access_token' in request.session:
+          access_token = request.session['access_token']
+        else:
+          access_token=None
+        url = geoserver_url + "wps" if not access_token else geoserver_url + "wps" + "?access_token=%s"%(access_token)
 
         # using template litral instead of concatinating strings with new lines
         payload = xml = """
