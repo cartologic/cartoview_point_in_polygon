@@ -43,7 +43,7 @@ class WMSClient {
         resolve(this._attributsCache[layerName]);
       })
     }
-    const url = URLS.rest + "geonodelayerattribute/?layer__typename=" + layerName
+    const url = URLS.attributesAPI + "?layer__typename=" + layerName
     return fetch(url, {
       credentials: 'include',
     }).then(res=>res.json()).then((res) => {

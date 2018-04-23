@@ -45,6 +45,10 @@ def _get_permitted_queryset(request, permission):
     return queryset
 
 
+def get_access_token(request): 
+    return request.session['access_token'] if 'access_token' in request.session else None 
+
+
 def update_geonode(request, resource):
     ''' Creates a table for the layer created in geoserver'''
     layer, created = Layer.objects.get_or_create(name=resource.name, defaults={
@@ -97,8 +101,9 @@ def generate_layer(request):
 
         attribute = request.POST['Attribute']
         new_feature_layer = request.POST['newLayerName']
-        url = geoserver_url + "wps"
-
+        access_token = get_access_token(request) 
+        url = geoserver_url + "wps" if not access_token else geoserver_url + \
+            "wps" + "?access_token=%s" % (access_token)
         # using template litral instead of concatinating strings with new lines
         payload = xml = """
             <p0:Execute
