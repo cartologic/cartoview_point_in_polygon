@@ -297,3 +297,12 @@ input[type="color"]::-webkit-color-swatch {
 .map-mask .loading {
     margin: 100px auto;
 }
+
+.geoserver-xml-error{
+    background-color: #f3f3f3;
+    padding: 10px 5px;
+    max-height: 200px;
+    overflow-y: scroll;
+    font-size: 14px;
+    color: black;
+}

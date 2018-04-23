@@ -7,7 +7,6 @@
 
 
 {% block head %}
-  {% include "geonode/ext_header.html" %}
   {{ block.super }}
 {% endblock %}
 
@@ -28,7 +27,7 @@
   {% if PROXY_URL %}
       const PROXY_URL='{{PROXY_URL}}'
   {% else %}
-      const PROXY_URL=null
+      const PROXY_URL=""
   {% endif %}
   const appManagerRest="{% url 'app_manager_base_url' %}rest/app_manager/"
   const URLS = {
@@ -44,20 +43,23 @@
         {% else %}
         wfsURL : "{{ GEOSERVER_BASE_URL }}wfs",
         wmsURL : "{{ GEOSERVER_BASE_URL }}wms",
+        wpsURL : "{{ GEOSERVER_BASE_URL }}wps",  
     {% endif %}
     static: "{{ STATIC_URL }}",
     appStatic: "{{ STATIC_URL }}{{APP_NAME}}",
     media: "{{ MEDIA_URL }}",
     geonodeRest: "{% url 'api_api_top_level' 'api' %}",
-    appLogo:'{% static '{{APP_NAME}}/logo.png' %}'
+    appLogo:'{% static '{{APP_NAME}}/logo.png' %}',
+    attributesAPI:"{% url 'api_dispatch_list' api_name='api' resource_name='attributes' %}",
   };
   const APP_NAME = "{{APP_NAME}}"
   const username = '{{username}}'
+  const workspace = "{{workspace}}"
 </script>
   <script src="{{ STATIC_URL }}cartoview_point_in_polygon/dist/commons.js?v={{v}}"></script>
   <script src="{{ STATIC_URL }}cartoview_point_in_polygon/dist/PNP.bundle.js?v={{v}}"></script>  
   <script type="text/javascript">
-    var viewer= new Viewer("config-form-ct",username,URLS)
+    var viewer= new Viewer("config-form-ct",username,URLS, workspace)
     viewer.view()
   </script>
 {% endblock %}

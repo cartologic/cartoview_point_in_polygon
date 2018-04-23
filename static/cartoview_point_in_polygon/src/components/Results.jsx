@@ -1,6 +1,12 @@
 import { Component } from 'react';
 // using reactstrap Forms
 export default class Results extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      successState: this.props.successState
+    }
+  }
   note() {
     return (
       <div className="panel panel-info">
@@ -31,8 +37,14 @@ export default class Results extends Component {
       </div>
     )
   }
+  componentWillReceiveProps(nextProps){
+    if(nextProps.successState != this.props.successState){
+      this.setState({successState: nextProps.successState})
+    }
+  }
   render() {
-    const { successState, typeName, loading } = this.props;
+    const { typeName, loading } = this.props;
+    const {successState} = this.state;
     // loading
     if ( loading ) return <div style={{
         margin: "10% auto auto"
