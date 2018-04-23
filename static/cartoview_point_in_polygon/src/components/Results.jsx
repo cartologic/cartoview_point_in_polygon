@@ -38,7 +38,7 @@ export default class Results extends Component {
     )
   }
   componentWillReceiveProps(nextProps){
-    if(nextProps != this.props){
+    if(nextProps.successState != this.props.successState){
       this.setState({successState: nextProps.successState})
     }
   }
