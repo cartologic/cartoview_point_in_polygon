@@ -7,7 +7,6 @@
 
 
 {% block head %}
-  {% include "geonode/ext_header.html" %}
   {{ block.super }}
 {% endblock %}
 
@@ -44,12 +43,14 @@
         {% else %}
         wfsURL : "{{ GEOSERVER_BASE_URL }}wfs",
         wmsURL : "{{ GEOSERVER_BASE_URL }}wms",
+        wpsURL : "{{ GEOSERVER_BASE_URL }}wps",  
     {% endif %}
     static: "{{ STATIC_URL }}",
     appStatic: "{{ STATIC_URL }}{{APP_NAME}}",
     media: "{{ MEDIA_URL }}",
     geonodeRest: "{% url 'api_api_top_level' 'api' %}",
-    appLogo:'{% static '{{APP_NAME}}/logo.png' %}'
+    appLogo:'{% static '{{APP_NAME}}/logo.png' %}',
+    attributesAPI:"{% url 'api_dispatch_list' api_name='api' resource_name='attributes' %}",
   };
   const APP_NAME = "{{APP_NAME}}"
   const username = '{{username}}'

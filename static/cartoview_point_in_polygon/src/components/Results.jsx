@@ -33,6 +33,7 @@ export default class Results extends Component {
   }
   render() {
     const { successState, typeName, loading } = this.props;
+    console.log(successState)
     // loading
     if ( loading ) return <div style={{
         margin: "10% auto auto"
