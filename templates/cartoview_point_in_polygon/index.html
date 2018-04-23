@@ -37,7 +37,6 @@
     proxy: PROXY_URL,
     rest:appManagerRest,
     layersAPI:"{% url 'api_dispatch_list' api_name='api' resource_name='layers' %}",
-    stylesUrl: "{% url 'cartoview_heatmap_styler.index' %}styles",
     {% if 'access_token' in request.session %}
         wfsURL : "{{ GEOSERVER_BASE_URL }}wfs?access_token={{request.session.access_token}}",
         wmsURL : "{{ GEOSERVER_BASE_URL }}wms?access_token={{request.session.access_token}}",
