@@ -4505,9 +4505,9 @@ tcomb-form-templates-bootstrap@^0.2.0:
     classnames "^2.1.3"
     tcomb "^3.0.0"
 
-tcomb-form@^0.9.16:
-  version "0.9.19"
-  resolved "https://registry.yarnpkg.com/tcomb-form/-/tcomb-form-0.9.19.tgz#635c41a50f8fdb6dab1fc2337f059d7214e48f93"
+tcomb-form@^0.9.21:
+  version "0.9.21"
+  resolved "https://registry.yarnpkg.com/tcomb-form/-/tcomb-form-0.9.21.tgz#86a958b50a723fae87786fa1ea4545b58e857bb9"
   dependencies:
     tcomb-form-templates-bootstrap "^0.2.0"
     tcomb-validation "^3.0.0"
