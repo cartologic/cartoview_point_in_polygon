@@ -72,7 +72,7 @@ export default class LayerStyles extends Component {
       credentials: "include",
       headers: new Headers( { "X-CSRFToken": getCRSFToken() } )
     } ).then( res => res.json() ).then( WPSResponse => {
-      if ( WPSResponse.status >= 400 ) {
+      if ( WPSResponse.status && WPSResponse.status >= 400 ) {
         this.props.showError( WPSResponse.error )
       } else {
         this.props.showResults( WPSResponse )
