@@ -47,7 +47,7 @@ export default class LayersList extends Component {
     const { username, layerType } = this.props
     let { myLayers, limit } = this.state
     const url = this.urls.getLayersApiURL( username, myLayers, limit, offset, {
-      'type': layerType.toLowerCase()
+      'geom_type': layerType.toLowerCase()
     } )
     doGet( url ).then( result => {
       this.setState( {
