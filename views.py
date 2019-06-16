@@ -21,7 +21,8 @@ from . import APP_NAME, __version__
 
 username, password = ogc_server_settings.credentials
 gs_catalog = Catalog(ogc_server_settings.internal_rest, username, password)
-
+ds_db_name = settings.OGC_SERVER['default']['DATASTORE']
+default_store = settings.DATABASES[ds_db_name]['NAME']
 
 @login_required
 def index(request):
@@ -66,6 +67,8 @@ def update_geonode(request, resource):
         "bbox_y1": Decimal(resource.latlon_bbox[3])
     })
     layer.save()
+    perms = {u'users': {u'AnonymousUser': [], request.user: [u'view_resourcebase', u'download_resourcebase', u'change_resourcebase_metadata', u'change_layer_data', u'change_layer_style', u'change_resourcebase', u'delete_resourcebase', u'change_resourcebase_permissions', u'publish_resourcebase']}, u'groups': {}}
+    layer.set_permissions(perms)
 
 
 @login_required
@@ -183,6 +186,14 @@ def generate_layer(request):
                 </p0:Input>
                 <p0:Input>
                   <p1:Identifier
+                    xmlns:p1="http://www.opengis.net/ows/1.1">store
+                  </p1:Identifier>
+                  <p0:Data>
+                    <p0:LiteralData>{}</p0:LiteralData>
+                  </p0:Data>
+                </p0:Input>                
+                <p0:Input>
+                  <p1:Identifier
                     xmlns:p1="http://www.opengis.net/ows/1.1">name
                   </p1:Identifier>
                   <p0:Data>
@@ -198,7 +209,7 @@ def generate_layer(request):
                 </p0:RawDataOutput>
               </p0:ResponseForm>
             </p0:Execute>
-        """.format(point_layer, attribute, polygon_layer, settings.DEFAULT_WORKSPACE, new_feature_layer)
+        """.format(point_layer, attribute, polygon_layer, settings.DEFAULT_WORKSPACE, default_store, new_feature_layer)
 
         headers = {
             'content-type': "application/xml",
