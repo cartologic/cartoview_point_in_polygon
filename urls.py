@@ -12,7 +12,8 @@ urlpatterns = [
     # /APP_NAME
     url(r'^$', views.index, name='%s.index' % APP_NAME),
     # generates layer from geoserver | /APP_NAME/generate-layer
-    url(r'^generate-layer$', views.generate_layer, name='%s.generate_layer' % APP_NAME),
+    url(r'^generate-layer$', views.generate_layer,
+        name='%s.generate_layer' % APP_NAME),
     #
     url(r'^', include(Resources_api.urls)),
 ]
