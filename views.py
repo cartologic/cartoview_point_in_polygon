@@ -221,7 +221,8 @@ def generate_layer(request):
         # if there is no errors while creating the layer in geoserver
         new_layer_name = response.text.split(':').pop(1)
         if new_layer_name == new_feature_layer:
-            resource = gs_catalog.get_resource(new_layer_name)
+            gs_layer = gs_catalog.get_layer(new_layer_name)
+            resource = gs_layer.resource
             type_name = "%s:%s" % (resource.workspace.name.encode(
                 'utf-8'), resource.name.encode('utf-8'))
             update_geonode(request, resource)
