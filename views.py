@@ -20,7 +20,7 @@ from . import APP_NAME, __version__
 
 
 username, password = ogc_server_settings.credentials
-gs_catalog = Catalog(ogc_server_settings.internal_rest, username, password)
+gs_catalog = Catalog(ogc_server_settings.rest, username, password)
 ds_db_name = settings.OGC_SERVER['default']['DATASTORE']
 default_store = settings.DATABASES[ds_db_name]['NAME']
 
