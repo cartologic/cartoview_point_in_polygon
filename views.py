@@ -9,6 +9,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.translation import ugettext as _
+from django.contrib.gis.geos import Polygon
 
 from geonode.layers.models import Layer, Attribute
 from geonode.geoserver.helpers import ogc_server_settings
@@ -52,6 +53,7 @@ def get_access_token(request):
 
 def update_geonode(request, resource):
     ''' Creates a table for the layer created in geoserver'''
+    bbox = [resource.latlon_bbox[0], resource.latlon_bbox[1], resource.latlon_bbox[2], resource.latlon_bbox[3]]
     layer, created = Layer.objects.get_or_create(name=resource.name, defaults={
         "workspace": resource.workspace.name,
         "store": resource.store.name,
@@ -61,10 +63,7 @@ def update_geonode(request, resource):
         "abstract": resource.abstract or _('No abstract provided'),
         "owner": request.user,
         "uuid": str(uuid.uuid4()),
-        "bbox_x0": Decimal(resource.latlon_bbox[0]),
-        "bbox_x1": Decimal(resource.latlon_bbox[1]),
-        "bbox_y0": Decimal(resource.latlon_bbox[2]),
-        "bbox_y1": Decimal(resource.latlon_bbox[3])
+        "bbox_polygon": Polygon.from_bbox(bbox),
     })
     layer.save()
     perms = {u'users': {u'AnonymousUser': [], request.user: [u'view_resourcebase', u'download_resourcebase', u'change_resourcebase_metadata', u'change_layer_data', u'change_layer_style', u'change_resourcebase', u'delete_resourcebase', u'change_resourcebase_permissions', u'publish_resourcebase']}, u'groups': {}}
