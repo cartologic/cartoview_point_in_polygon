@@ -42,7 +42,7 @@
         "reactstrap": "^4.5.0",
         "slugify": "^1.2.8",
         "tcomb-form": "^0.9.21",
-        "url-assembler": "^1.2.9"
+        "url-assembler": "^1.2.10"
     },
     "peerDependencies": {
         "react": "^0.14.3 || ^15.0.0",
